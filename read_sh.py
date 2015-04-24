@@ -21,7 +21,7 @@ class ReadSh:
         otxt=''
         for iline in self.data:
             otxt+=iline
-        odata=oepn(ofile,'w')
+        odata=open(ofile,'w')
         odata.write(otxt)
 
 if __name__=="__main__":
