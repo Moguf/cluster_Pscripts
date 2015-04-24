@@ -20,9 +20,9 @@ class GoQueue:
         inp_instance=read_inp.InpFile(self.inpfile)
         sh_instance=read_sh.ReadSh(self.shfile)
 
-        for index,data in enumerate(xrange(300,310,5)):
+        for index,data in enumerate(xrange(300,445,5)):
             #for inp
-            for seed in range(1):
+            for seed in range(1,11):
                 inp_instance.filename('mvmmon'+str(data)+str(seed))
                 inp_instance.temp(float(str(data)+".0"))
                 inp_instance.seed(seed)
