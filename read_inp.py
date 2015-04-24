@@ -6,65 +6,64 @@
 #test.path="~/tmp/tmp"
 #tset.pathinit="~/pdb"
 #-----------------------------------------
-
-
 import copy
-class inpfile:
+
+
+class InpFile:
     def __init__(self,defalut_input):
-        self.data = open(defalut_input.split("\n")).readlines()
+        self.data = open(defalut_input).readlines()
         self.original_data=copy.deepcopy(self.data)
         
         for dummy in self.data:
             if dummy[0:7] == 'tempk =':
                 self.T = float(dummy[8:14])
 
-
-    
     def show(self):
         for line in self.data:
             print line
             
+
     def path(self,dirc):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:6] == 'path =':
-                self.data[dummy] = 'path = %s'%dirc
+                self.data[dummy] = 'path = %s\n'%dirc
                 
     def pathpdb(self,dirp):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:8] == 'path_pdb':
-                self.data[dummy] = 'path_pdb = %s'%dirp
+                self.data[dummy] = 'path_pdb = %s\n'%dirp
 
     def pathini(self,dirp):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:8] == 'path_ini':
-                self.data[dummy] = 'path_ini = %s'%dirp
+                self.data[dummy] = 'path_ini = %s\n'%dirp
                 
     def pathpara(self,dirp):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:9] == 'path_para':
-                self.data[dummy] = 'path_para = %s'%dirp
+                self.data[dummy] = 'path_para = %s\n'%dirp
                 
                 
     def pathninfo(self,dirp):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:12] == 'path_natinfo':
-                self.data[dummy] = 'path_natinfo = %s'%dirp
+                self.data[dummy] = 'path_natinfo = %s\n'%dirp
     
 
     def filename(self,name):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:8] == 'filename':
-                self.data[dummy] = 'filename = %s'%name
+                self.data[dummy] = 'filename = %s\n'%name
     
     def output(self,files):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:6] == 'OUTPUT':
-                self.data[dummy] = 'OUTPUT %s'%files
+                self.data[dummy] = 'OUTPUT %s\n'%files
     
     def pathpara(self,para):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:9] == 'path_para':
-                self.data[dummy] = 'path_para = %s'%para
+                self.data[dummy] = 'path_para = %s\n'%para
     
     def run_mode(self,mode):
         for dummy in xrange(len(self.data)):
@@ -79,7 +78,7 @@ class inpfile:
     def initial(self,state):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:15] == 'i_initial_state':
-                self.data[dummy] = 'i_initial_state = %d'%state
+                self.data[dummy] = 'i_initial_state = %d\n'%sntate
             if state == 6:
                 txt="**<<<< initial_struct"
                 if self.data[dummy][0:len(txt)] == txt:
@@ -88,7 +87,7 @@ class inpfile:
         for dummy in xrange(len(self.data)):
             txt="<<<< initial_struct"
             if self.data[dummy][0:len(txt)] == txt:
-                insert_txt="1-%d     %s" %(num,pdb_name)
+                insert_txt="1-%d     %s\n" %(num,pdb_name)
                 self.data.insert(dummy+1,insert_txt)
     def seq_read(self,state):
         for dummy in xrange(len(self.data)):
@@ -113,30 +112,30 @@ class inpfile:
         for dummy in xrange(len(self.original_data)):
             if self.original_data[dummy][0:12] == '1    protein':
                 if style==1:
-                    self.data[dummy] = '%d    protein       %s'%(num,pdb)
+                    self.data[dummy] = '%d    protein       %s\n'%(num,pdb)
                     print "in style 1"
                 elif style==2:
-                    self.data[dummy] = '1    protein       %s \n2     protein       %s'%(pdb,pdb2)
+                    self.data[dummy] = '1    protein       %s \n2     protein       %s\n'%(pdb,pdb2)
                 elif style==3:
-                    self.data[dummy] = '1-%d    protein       %s'%(num,pdb)
+                    self.data[dummy] = '1-%d    protein       %s\n'%(num,pdb)
     
 
                     
     def local(self,pro_num,potential):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:5] == 'LOCAL':
-                self.data[dummy] = 'LOCAL(1-%d)  %s'%(pro_num,potential)
+                self.data[dummy] = 'LOCAL(1-%d)  %s\n'%(pro_num,potential)
                 
     
     def nlocal(self,pro_num,style,potential):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:6] == 'NLOCAL':
                 if style==1:
-                     self.data[dummy]='NLOCAL(1-%d/1-%d)  %s'%(pro_num,pro_num,potential)
+                     self.data[dummy]='NLOCAL(1-%d/1-%d)  %s\n'%(pro_num,pro_num,potential)
                 elif style==2:
-                    self.data[dummy] ='NLOCAL(%d/%d)  %s'%(1,1,potential)
+                    self.data[dummy] ='NLOCAL(%d/%d)  %s\n'%(1,1,potential)
                     for i in xrange(2,pro_num+1):
-                        self.data.insert(dummy+1,'NLOCAL(%d/%d)  %s'%(i,i,potential))
+                        self.data.insert(dummy+1,'NLOCAL(%d/%d)  %s\n'%(i,i,potential))
                     break
                     
                 
@@ -168,25 +167,25 @@ class inpfile:
     def temp(self,t):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:7] == 'tempk =':
-                self.data[dummy] = 'tempk = %s'%float(t)
+                self.data[dummy] = 'tempk = %s \n'%float(t)
     
     def zeroing(self,t):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:13] == 'i_com_zeroing':
-                self.data[dummy] = 'i_com_zeroing = %s'%int(t)
+                self.data[dummy] = 'i_com_zeroing = %s\n'%int(t)
     
     def seed(self,s):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:6] == 'n_seed':
-                self.data[dummy] = 'n_seed = %s'%str(s)
+                self.data[dummy] = 'n_seed = %s\n'%str(s)
     
     
     def critical(self,upper,lower):
         for dummy in xrange(len(self.data)):
             if self.data[dummy][0:11] == 'tempk_upper':
-                self.data[dummy] = 'tempk_upper = %s'%float(upper)
+                self.data[dummy] = 'tempk_upper = %s\n'%float(upper)
             if self.data[dummy][0:11] == 'tempk_lower':
-                self.data[dummy] = 'tempk_lower = %s'%float(lower)
+                self.data[dummy] = 'tempk_lower = %s\n'%float(lower)
     
     def delgo_addflp(self,*s):
         self.flp()
@@ -203,9 +202,9 @@ class inpfile:
                     break
                 for i in xrange(0,len(s)-1,2):
                     if i>1:
-                        self.data.insert(dummy+1,'DEL_LGO_ADD_FLP(%s-%s)   '%(s[i],s[i+1]))
+                        self.data.insert(dummy+1,'DEL_LGO_ADD_FLP(%s-%s)   \n'%(s[i],s[i+1]))
                     else:
-                        self.data[dummy] = 'DEL_LGO_ADD_FLP(%s-%s)   '%(s[i],s[i+1])
+                        self.data[dummy] = 'DEL_LGO_ADD_FLP(%s-%s)   \n'%(s[i],s[i+1])
                 break
     
     def fix(self,flag,s,e):
@@ -270,5 +269,5 @@ class inpfile:
     def write(self,filename):
         outfile = open(filename,'w')
         for dummy in self.data:
-            outfile.write(dummy+"\n")
+            outfile.write(dummy)
 
