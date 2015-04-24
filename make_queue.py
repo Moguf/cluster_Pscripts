@@ -23,12 +23,12 @@ class GoQueue:
         for index,data in enumerate(xrange(300,445,5)):
             #for inp
             for seed in range(1,11):
-                inp_instance.filename('monNoE'+str(data)+str(seed))
+                inp_instance.filename('extmon'+str(data)+str(seed))
                 inp_instance.temp(float(str(data)+".0"))
                 inp_instance.seed(seed)
                 inp_instance.write("out.inp")
                 #for sh
-                sh_instance.change_name("mvm"+str(data)+"r"+str(seed))
+                sh_instance.change_name("extmvm"+str(data)+"r"+str(seed))
                 sh_instance.write("out.sh")
                 #do shell
                 print 'qsub mvm.sh'
