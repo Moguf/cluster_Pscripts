@@ -270,4 +270,4 @@ class InpFile:
         outfile = open(filename,'w')
         for dummy in self.data:
             outfile.write(dummy)
-
+            
