@@ -6,7 +6,7 @@
 **                                                          **
 **************************************************************
 
- <<<< filenames  
+<<<< filenames  
 path = ~/mvmtrunk/data
 filename = mvmmon400
 OUTPUT pdb crd dcd psf rst

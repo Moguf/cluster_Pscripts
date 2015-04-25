@@ -68,34 +68,37 @@ class CafemolStyleInp:
         self.n_seed = False
         self.i_com_zeroing_ini = False
         self.i_com_zeroing = False
-        self.i_no_trans_rot = 0
+        self.i_no_trans_rot = False
         ####optional parameters
-        self.i_implig = 0
-        self.i_redef_para = 0
-        self.i_energy_para = 0
-        self.i_neigh_dist = 0
-        self.i_mass = 0
-        self.i_fric = 0
-        self.i_mass_fric = 0
-        self.i_del_int = 0
-        self.i_anchor = 0
-        self.i_rest1d = 0
-        self.i_bridge = 0
-        self.i_pulling = 0
-        self.i_fix = 0
-        self.i_in_box = 0
-        self.i_in_cap = 0
-        self.i_modified_muca = 0
+        self.i_implig = False
+        self.i_redef_para = False
+        self.i_energy_para = False
+        self.i_neigh_dist = False
+        self.i_mass = False
+        self.i_fric = False
+        self.i_mass_fric = False
+        self.i_del_int = False
+        self.i_anchor = False
+        self.i_rest1d = False
+        self.i_bridge = False
+        self.i_pulling = False
+        self.i_fix = False
+        self.i_in_box = False
+        self.i_in_cap = False
+        self.i_modified_muca = False
         
     def main(self):
         self.read()
-        
+        self.write()
 
     def read(self):
         self._refinement()
         self._readBlock()
         self._readContents()
 
+    def write(self):
+        pass
+    
     def _refinement(self):
         ######  remove empty data.
         while(True):
@@ -171,11 +174,40 @@ class CafemolStyleInp:
                 self.i_use_atom_dna = ilist
             if re.search(r"^i_output_energy_style$",ilist[0]):
                 self.i_output_energy_style = ilist
-        ###I need to refine this data structure###
 
+            ##md_information
+            if re.search(r"^n_step_sim$",ilist[0]):
+                self.n_step_sim = ilist
+            if re.search(r"^n_tstep",ilist[0]):
+                self.n_tstep = ilist
+            if re.search(r"^tstep_size$",ilist[0]):
+                self.tstep_size = ilist
+            if re.search(r"^n_step_save$",ilist[0]):
+                self.n_step_save = ilist
+            if re.search(r"^n_step_rst$",ilist[0]):
+                self.n_step_rst = ilist
+            if re.search(r"^n_step_neighbor$",ilist[0]):
+                self.n_step_neighbor = ilist
+            if re.search(r"^tempk$",ilist[0]):
+                self.tempk = ilist
+            if re.search(r"^i_rand_type$",ilist[0]):
+                self.i_rand_type = ilist
+            if re.search(r"^n_seed$",ilist[0]):
+                self.n_seed = ilist
+            if re.search(r"^i_com_zeroing_ini$",ilist[0]):
+                self.i_com_zeroing_ini = ilist
+            if re.search(r"^i_com_zeroing$",ilist[0]):
+                self.i_com_zeroing = ilist
+            if re.search(r"^i_no_trans_rot$",ilist[0]):
+                self.i_no_trans_rot = ilist
+            
 
-
-                
+    def show(self):
+        for i in self.__dict__.keys():
+            print i,'\t\t\t',
+            print self.__dict__[i]
 if __name__  ==  "__main__":
     test = CafemolStyleInp("./test/inp/test.inp")
     test.main()
+    test.show()
+    
