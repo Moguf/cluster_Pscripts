@@ -6,7 +6,7 @@
 **                                                          **
 **************************************************************
 
-<<<< filenames  
+<<<< filenames
 path = ~/mvmtrunk/data
 filename = mvmmon400
 OUTPUT pdb crd dcd psf rst
@@ -43,7 +43,6 @@ i_triple_angle_term = 0
 i_use_atom_protein = 0
 i_use_atom_dna = 0
 i_flp = 1
-i_usr_atom_protein = 1
 >>>>
 
 

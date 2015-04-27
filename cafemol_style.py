@@ -2,10 +2,9 @@
 #coding:utf-8
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.
-
-
 import re
 
+import myutil
 
 class CafemolStyleInp:
     def __init__(self,inpfile):
@@ -15,11 +14,11 @@ class CafemolStyleInp:
 
         ##########Block names
         ##default_styles
-        self.b_filenames = True
-        self.b_job_cntl = True
-        self.b_unit_and_state = True
-        self.b_energy_function = True
-        self.b_md_information = True
+        self.b_filenames = False
+        self.b_job_cntl = False
+        self.b_unit_and_state = False
+        self.b_energy_function = False
+        self.b_md_information = False
 
         ##optional flag
         self.electrostatic = False
@@ -29,6 +28,8 @@ class CafemolStyleInp:
         ##########Content names
         ##filenames contents
         self.filename = False
+        self.path = False
+        self.output = False
         self.path_pdb = False
         self.path_ini = False
         self.path_natinfo = False
@@ -55,6 +56,8 @@ class CafemolStyleInp:
         self.i_use_atom_protein = False
         self.i_use_atom_dna = False
         self.i_output_energy_style = False
+        self.i_flp = False
+        self.i_triple_angle_term = False
 
         ##md_information
         self.n_step_sim = False
@@ -89,6 +92,7 @@ class CafemolStyleInp:
         
     def main(self):
         self.read()
+        self.check()
         self.write()
 
     def read(self):
@@ -96,8 +100,95 @@ class CafemolStyleInp:
         self._readBlock()
         self._readContents()
 
+
+    def check(self):
+        print "in check"
+        if self.b_filenames:
+            raise Exception,"filenames block is not in your input file."
+        if self.b_job_cntl:
+            raise Exception,"job_cntl block is not in your input file."
+        if self.b_unit_and_state:
+            raise Exception,"unit_and_state block is not in your input file."
+        if self.b_energy_function:
+            raise Exception,"energy_function block is not in your input file."
+        if self.b_md_information:
+            raise Exception,"md_infortmation block is not in your input file."
+        
+        
     def write(self):
-        pass
+        ofile=open("testinp.out",'w')
+        otxt=""
+
+        ## filenamse Block
+        otxt+="<<<< filenames\n"
+        otxt+=self._write_contents(self.filename)
+        otxt+=self._write_contents(self.path)
+        otxt+=self._write_contents(self.output)
+        otxt+=self._write_contents(self.path_pdb)
+        otxt+=self._write_contents(self.path_ini)
+        otxt+=self._write_contents(self.path_natinfo)
+        otxt+=self._write_contents(self.path_aicg)
+        otxt+=self._write_contents(self.path_para)
+        otxt+=self._write_contents(self.path_msf)
+        otxt+=">>>>\n\n"
+        
+        ##job_cntl
+        otxt+="<<<< job_cntl\n"
+        otxt+=self._write_contents(self.i_run_mode)
+        otxt+=self._write_contents(self.i_simulate_type)
+        otxt+=self._write_contents(self.i_initial_state)
+        otxt+=self._write_contents(self.i_initial_velo)
+        otxt+=self._write_contents(self.i_periodic)
+        otxt+=">>>>\n\n"
+        
+        ##unit_and_state
+        otxt+="<<<< unit_and_state\n"
+        otxt+=self._write_contents(self.i_seq_read_style)
+        otxt+=self._write_contents(self.i_go_native_read_style)
+        otxt+=self._write_contents(self.read_pdb)
+        otxt+=">>>>\n\n"
+
+        ##energy_function
+        otxt+="<<<< energy_function\n"
+        otxt+=self._write_contents(self.local)
+        otxt+=self._write_contents(self.nlocal)
+        ###I need to refine this data structure###
+        otxt+=self._write_contents(self.i_use_atom_protein)
+        otxt+=self._write_contents(self.i_use_atom_dna)
+        otxt+=self._write_contents(self.i_output_energy_style)
+        otxt+=self._write_contents(self.i_flp)
+        otxt+=self._write_contents(self.i_triple_angle_term)
+        otxt+=">>>>\n\n"
+        
+        ##md_information
+        otxt+="<<<< md_information\n"
+        otxt+=self._write_contents(self.n_step_sim)
+        otxt+=self._write_contents(self.n_tstep)
+        otxt+=self._write_contents(self.tstep_size)
+        otxt+=self._write_contents(self.n_step_save)
+        otxt+=self._write_contents(self.n_step_rst)
+        otxt+=self._write_contents(self.n_step_neighbor)
+        otxt+=self._write_contents(self.tempk)
+        otxt+=self._write_contents(self.i_rand_type)
+        otxt+=self._write_contents(self.n_seed)
+        otxt+=self._write_contents(self.i_com_zeroing_ini)
+        otxt+=self._write_contents(self.i_com_zeroing)
+        otxt+=self._write_contents(self.i_no_trans_rot)
+        otxt+=">>>>\n\n"
+        
+
+        
+        
+        print(otxt)
+        ofile.close()
+        
+    def _write_contents(self,_list):
+        if _list:
+            return " ".join(_list)+"\n"
+        else:
+            return ""
+        
+
     
     def _refinement(self):
         ######  remove empty data.
@@ -125,13 +216,18 @@ class CafemolStyleInp:
             
     def _readContents(self):
         for iline in self.original_data:
-            ilist=iline.split(" =")
+            ilist=iline.split()
+            
             ###print ilist
             ###filenames block
             if re.search(r"^filename$",ilist[0]):
                 self.filename=ilist
+            if re.search(r"^path$",ilist[0]):
+                self.path=ilist
             if re.search(r"^path_pdb$",ilist[0]):
                 self.path_pdb=ilist
+            if re.search(r"^OUTPUT",ilist[0]):
+                self.output=ilist
             if re.search(r"^path_ini$",ilist[0]):
                 self.path_ini=ilist
             if re.search(r"^path_natinfo$",ilist[0]):
@@ -145,7 +241,7 @@ class CafemolStyleInp:
 
             ###job_cntl
             if re.search(r"^i_run_mode$",ilist[0]):
-                self.path_msf=ilist
+                self.i_run_mode=ilist
             if re.search(r"^i_simulate_type$",ilist[0]):
                 self.i_simulate_type = ilist
             if re.search(r"^i_initial_state$",ilist[0]):
@@ -174,7 +270,11 @@ class CafemolStyleInp:
                 self.i_use_atom_dna = ilist
             if re.search(r"^i_output_energy_style$",ilist[0]):
                 self.i_output_energy_style = ilist
-
+            if re.search(r"^i_flp$",ilist[0]):
+                self.i_flp = ilist
+            if re.search(r"^i_triple_angle_term$",ilist[0]):
+                self.i_triple_angle_term = ilist
+                
             ##md_information
             if re.search(r"^n_step_sim$",ilist[0]):
                 self.n_step_sim = ilist
@@ -201,13 +301,15 @@ class CafemolStyleInp:
             if re.search(r"^i_no_trans_rot$",ilist[0]):
                 self.i_no_trans_rot = ilist
             
+                
 
+                
     def show(self):
         for i in self.__dict__.keys():
             print i,'\t\t\t',
             print self.__dict__[i]
+            
 if __name__  ==  "__main__":
     test = CafemolStyleInp("./test/inp/test.inp")
     test.main()
-    test.show()
     
