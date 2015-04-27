@@ -3,6 +3,7 @@
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.
 
+import cafemol_style
 
 class MakeCafeJson:
     def __init__(self):
@@ -10,5 +11,7 @@ class MakeCafeJson:
 
     
 if __name__ == "__main__":
-    pass
+    test = CafemolStyleInp("./test/inp/test.inp")
+    test.main()
+    
 
