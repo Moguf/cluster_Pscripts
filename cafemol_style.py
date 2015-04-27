@@ -216,7 +216,7 @@ class CafemolStyleInp:
             
     def _readContents(self):
         for iline in self.original_data:
-            ilist=iline.split()
+            ilist=myutil.mySplit(iline,"=")
             
             ###print ilist
             ###filenames block
@@ -256,14 +256,14 @@ class CafemolStyleInp:
                 self.i_seq_read_style = ilist
             if re.search(r"^i_go_native_read_style$",ilist[0]):
                 self.i_go_native_read_style = ilist
-            if re.search(r" protein ",ilist[0]):
-                self.read_pdb = ilist[0].split()
-
+            if "protein" in ilist:
+                ####  FUTURE: I need to change this sentence in future.
+                self.read_pdb = ilist
             ##energy_function
             if re.search(r"^LOCAL",ilist[0]):
-                self.local=ilist[0].split()
+                self.local=ilist
             if re.search(r"^NLOCAL",ilist[0]):
-                self.nlocal=ilist[0].split()
+                self.nlocal=ilist
             if re.search(r"^i_use_atom_protein$",ilist[0]):
                 self.i_use_atom_protein = ilist
             if re.search(r"^i_use_atom_dna$",ilist[0]):
@@ -300,8 +300,6 @@ class CafemolStyleInp:
                 self.i_com_zeroing = ilist
             if re.search(r"^i_no_trans_rot$",ilist[0]):
                 self.i_no_trans_rot = ilist
-            
-                
 
                 
     def show(self):
