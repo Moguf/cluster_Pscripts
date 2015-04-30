@@ -1,0 +1,86 @@
+{
+    "queue": {
+        "1": "#!/bin/sh", 
+        "3": "#$ -V", 
+        "2": "#$ -S /bin/sh", 
+        "5": "#$ -o ", 
+        "4": "#$ -N ", 
+        "7": "#$ -pe smp ", 
+        "6": "#$ -q ", 
+        "9": "./cafemol ./inp/test.inp", 
+        "8": "OMP_NUM_THREADS "
+    }, 
+    "inputfile": {
+        "job_cntl": {
+            "i_run_mode": "2", 
+            "i_initial_state": "2", 
+            "i_simulate_type": "1"
+        }, 
+        "filenames": {
+            "path_para": "~/mvmtrunk/para", 
+            "filename": {
+                "index": "", 
+                "prefix": "", 
+                "name": "mvmmon400"
+            }, 
+            "path_ini": "~/mvmtrunk/pdb", 
+            "output": [
+                "OUTPUT", 
+                "pdb", 
+                "crd", 
+                "dcd", 
+                "psf", 
+                "rst"
+            ], 
+            "path": "~/mvmtrunk/data", 
+            "path_pdb": "~/mvmtrunk/pdb"
+        }, 
+        "energy_function": {
+            "i_flp": "1", 
+            "i_use_atom_protein": "0", 
+            "i_triple_angle_term": "0", 
+            "i_use_atom_dna": "0", 
+            "local": [
+                "LOCAL(1-1)", 
+                "L_AICG2_PLUS"
+            ], 
+            "nlocal": [
+                "NLOCAL(1-1/1-1)", 
+                "EXV", 
+                "ELE", 
+                "AICG2"
+            ]
+        }, 
+        "optional_block": {
+            "b_aicg": {
+                "i_aicg": "1"
+            }, 
+            "b_flexible_local": {
+                "k_dih": "1.00", 
+                "k_ang": "1.00"
+            }, 
+            "b_electrostatic": {
+                "ionic_strength": "0.150", 
+                "cutoff": "12.0", 
+                "diele_water": "78.0", 
+                "i_diele": "78.0"
+            }
+        }, 
+        "unit_and_state": {
+            "i_seq_read_style": "1", 
+            "i_go_native_read_style": "1", 
+            "read_pdb": "mvm_mon.pdb"
+        }, 
+        "md_infortmation": {
+            "n_seed": "-1", 
+            "i_no_trans_rot": "0", 
+            "n_step_sim": "1", 
+            "tempk": "400.0", 
+            "n_step_save": "1000", 
+            "n_step_neighbor": "100", 
+            "tstep_size": "0.1", 
+            "i_com_zeroing": "1", 
+            "n_tstep": "100000000"
+        }
+    }
+}

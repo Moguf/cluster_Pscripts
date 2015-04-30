@@ -22,7 +22,6 @@ def mySplit(string,spliter=""):
         outlist=_tmptxt.split()
         return outlist
     else:
-        print string.split()
         return string.split()
             
             

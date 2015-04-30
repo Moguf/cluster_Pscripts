@@ -21,9 +21,9 @@ class CafemolStyleInp:
         self.b_md_information = False
 
         ##optional flag
-        self.electrostatic = False
-        self.flexible_local = False
-        self.aicg = False
+        self.b_electrostatic = False
+        self.b_flexible_local = False
+        self.b_aicg = False
 
         ##########Content names
         ##filenames contents
@@ -89,11 +89,24 @@ class CafemolStyleInp:
         self.i_in_box = False
         self.i_in_cap = False
         self.i_modified_muca = False
+
+        ##optional blocks
+        #### aicg
+        self.i_aicg = False
+        #### electrostatic
+        self.cutoff = False
+        self.ionic_strength = False
+        self.diele_water = False
+        self.i_diele= False
+        #### flexible_local
+        self.k_dih = False
+        self.k_ang = False
+
+        
         
     def main(self):
         self.read()
         self.check()
-        self.write()
 
     def read(self):
         self._refinement()
@@ -102,21 +115,21 @@ class CafemolStyleInp:
 
 
     def check(self):
-        print "in check"
-        if self.b_filenames:
+        print "check block statements....",
+        if not self.b_filenames:
             raise Exception,"filenames block is not in your input file."
-        if self.b_job_cntl:
+        if not self.b_job_cntl:
             raise Exception,"job_cntl block is not in your input file."
-        if self.b_unit_and_state:
+        if not self.b_unit_and_state:
             raise Exception,"unit_and_state block is not in your input file."
-        if self.b_energy_function:
+        if not self.b_energy_function:
             raise Exception,"energy_function block is not in your input file."
-        if self.b_md_information:
+        if not self.b_md_information:
             raise Exception,"md_infortmation block is not in your input file."
+        print " OK !!!"
         
-        
-    def write(self):
-        ofile=open("testinp.out",'w')
+    def write(self,outfile="./test/out/testinp.out"):
+        ofile=open(outfile,'w')
         otxt=""
 
         ## filenamse Block
@@ -178,8 +191,6 @@ class CafemolStyleInp:
         
 
         
-        
-        print(otxt)
         ofile.close()
         
     def _write_contents(self,_list):
@@ -202,16 +213,28 @@ class CafemolStyleInp:
     def _readBlock(self):
         for iline in self.original_data:
             stripedline=iline.strip()
-            self.filenames = iline.endswith('filenames')
-            self.job_cntl = iline.endswith('job_cntl')
-            self.unit_and_state = iline.endswith('unit_and_state')
-            self.energy_function = iline.endswith('energy_function')
-            self.md_information = iline.endswith('md_information')
-            #####optional flags
-            self.electrostatic = iline.endswith('electrostatic')
-            self.flexible_local = iline.endswith('flec')
-            self.aicg = iline.endswith('aicg')
+            if iline.endswith('filenames'):
+                self.b_filenames = iline.endswith('filenames')
 
+            if iline.endswith('job_cntl'):
+                self.b_job_cntl = iline.endswith('job_cntl')
+
+            if iline.endswith('unit_and_state'):
+                self.b_unit_and_state = iline.endswith('unit_and_state')
+
+            if iline.endswith('energy_function'):
+                self.b_energy_function = iline.endswith('energy_function')
+                
+            if iline.endswith('md_information'):
+                self.b_md_information = iline.endswith('md_information')
+
+            #####optional flags
+            if iline.endswith('electrostatic'):
+                self.b_electrostatic = iline.endswith('electrostatic')
+            if iline.endswith('flexible_local'):
+                self.b_flexible_local = iline.endswith('flexible_local')
+            if iline.endswith('aicg'):
+                self.b_aicg = iline.endswith('aicg')
 
             
     def _readContents(self):
@@ -259,6 +282,7 @@ class CafemolStyleInp:
             if "protein" in ilist:
                 ####  FUTURE: I need to change this sentence in future.
                 self.read_pdb = ilist
+                
             ##energy_function
             if re.search(r"^LOCAL",ilist[0]):
                 self.local=ilist
@@ -301,7 +325,26 @@ class CafemolStyleInp:
             if re.search(r"^i_no_trans_rot$",ilist[0]):
                 self.i_no_trans_rot = ilist
 
-                
+            ##### optional blocks
+            ###### aicg
+            if re.search(r"^i_aicg$",ilist[0]):
+                self.i_aicg = ilist
+            ###### electrostatic
+            if re.search(r"^cutoff$",ilist[0]):
+                self.cutoff = ilist
+            if re.search(r"^ionic_strength$",ilist[0]):
+                self.ionic_strength = ilist
+            if re.search(r"^diele_water$",ilist[0]):
+                self.diele_water = ilist
+            if re.search(r"^i_diele$",ilist[0]):
+                self.i_diele = ilist
+            ###### flexible_local
+            if re.search(r"^k_dih$",ilist[0]):
+                self.k_dih = ilist
+            if re.search(r"^k_ang$",ilist[0]):
+                self.k_ang = ilist
+
+
     def show(self):
         for i in self.__dict__.keys():
             print i,'\t\t\t',
