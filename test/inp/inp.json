@@ -52,18 +52,18 @@
             ]
         }, 
         "optional_block": {
-            "electrostatic": {
+            "b_aicg": {
+                "i_aicg": "1"
+            }, 
+            "b_flexible_local": {
+                "k_dih": "1.00", 
+                "k_ang": "1.00"
+            }, 
+            "b_electrostatic": {
                 "ionic_strength": "0.150", 
                 "cutoff": "12.0", 
                 "diele_water": "78.0", 
                 "i_diele": "78.0"
-            }, 
-            "aicg": {
-                "i_aicg": "1"
-            }, 
-            "flexible_local": {
-                "k_dih": "1.00", 
-                "k_ang": "1.00"
             }
         }, 
         "unit_and_state": {
@@ -72,10 +72,10 @@
             "read_pdb": "mvm_mon.pdb"
         }, 
         "md_infortmation": {
-            "n_seed": "-1", 
+            "n_seed": [1,10], 
             "i_no_trans_rot": "0", 
             "n_step_sim": "1", 
-            "tempk": "400.0", 
+            "tempk": [300,400,5], 
             "n_step_save": "1000", 
             "n_step_neighbor": "100", 
             "tstep_size": "0.1", 

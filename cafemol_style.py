@@ -7,9 +7,7 @@ import re
 import myutil
 
 class CafemolStyleInp:
-    def __init__(self,inpfile):
-        ######remove '\n' in each sentence and make list-data
-        self.original_data = [iline.strip() for iline in open(inpfile,'r').readlines()]
+    def __init__(self):
 
 
         ##########Block names
@@ -105,10 +103,12 @@ class CafemolStyleInp:
         
         
     def main(self):
-        self.read()
+        self.read("test.inp")
         self.check()
 
-    def read(self):
+    def read(self,inpfile):
+        ######remove '\n' in each sentence and make list-data
+        self.original_data = [iline.strip() for iline in open(inpfile,'r').readlines()]
         self._refinement()
         self._readBlock()
         self._readContents()
@@ -351,6 +351,6 @@ class CafemolStyleInp:
             print self.__dict__[i]
             
 if __name__  ==  "__main__":
-    test = CafemolStyleInp("./test/inp/test.inp")
-    test.main()
+    test = CafemolStyleInp()
+    test.read("./test/inp/test.inp")
     

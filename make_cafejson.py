@@ -8,15 +8,15 @@ from cafemol_style import CafemolStyleInp
 
 
 class MakeCafeJson(CafemolStyleInp):
-    def __init__(self,inpfile):
-        CafemolStyleInp.__init__(self,inpfile)
+    def __init__(self):
+        CafemolStyleInp.__init__(self)
         self.job_name=""
         self.job_core=1
         self.job_quete=""
         
 
-    def main(self):
-        self.read()
+    def main(self,inpfile):
+        self.read(inpfile)
         self.check()
         self.makeJson()
         
@@ -30,8 +30,10 @@ class MakeCafeJson(CafemolStyleInp):
                    "optional_block":self._makeOptBlock()
                    }
 
-        jsondict={"inputfile":inputdict,
-                  "queue":self._makeQueue()}
+        jsondict={
+            "inputfile":inputdict,
+            "queue":self._makeQueue()
+        }
 
         jsondata=json.dumps(jsondict,indent=4)
         outfile=open(outjson,"w")
@@ -147,12 +149,12 @@ class MakeCafeJson(CafemolStyleInp):
         _optblockdict={}
         
         if self.b_aicg:
-            _optblockdict["b_aicg"]={
+            _optblockdict["aicg"]={
                 "i_aicg":self.i_aicg[-1]
             }
             
         if self.b_electrostatic:
-            _optblockdict["b_electrostatic"]={
+            _optblockdict["electrostatic"]={
                 "cutoff":self.cutoff[-1],
                 "ionic_strength":self.ionic_strength[-1],
                 "diele_water":self.diele_water[-1],
@@ -160,7 +162,7 @@ class MakeCafeJson(CafemolStyleInp):
             }
 
         if self.b_flexible_local:
-            _optblockdict["b_flexible_local"]={
+            _optblockdict["flexible_local"]={
                 "k_dih":self.k_dih[-1],
                 "k_ang":self.k_ang[-1],
             }
@@ -185,7 +187,7 @@ class MakeCafeJson(CafemolStyleInp):
         return _queuedic
         
 if __name__ == "__main__":
-    test = MakeCafeJson("./test/inp/test.inp")
-    test.main()
+    test = MakeCafeJson()
+    test.main("./test/inp/test.inp")
     
 
