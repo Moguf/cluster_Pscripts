@@ -52,7 +52,6 @@ class MakeCafeJson(CafemolStyleInp):
             "output":self.output,
             "path_pdb":self.path_pdb[-1],
             "path_ini":self.path_ini[-1],
-
             "path_para":self.path_para[-1],
         }
         
