@@ -11,6 +11,7 @@ class ReadTs:
     def main(self,filename):
         self.read(filename)
         self.transposeData()
+        print self.data
 
     def read(self,filename):
         self.filename=filename
@@ -42,7 +43,7 @@ class ReadTs:
             if key=="unit":
                 continue
             self.data[key]=np.array(self.data[key])
-
+        self.data['all'].T
 
 if __name__=="__main__":
     test=ReadTs()
