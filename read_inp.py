@@ -10,8 +10,8 @@ import copy
 
 
 class InpFile:
-    def __init__(self,defalut_input):
-        self.data = open(defalut_input).readlines()
+    def __init__(self,filename):
+        self.data = open(filename).readlines()
         self.original_data=copy.deepcopy(self.data)
         
         for dummy in self.data:
