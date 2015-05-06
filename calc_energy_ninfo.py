@@ -27,13 +27,21 @@ class CalcEnergyNinfo(ReadNinfo):
                     ### energy+= coef_** from ninfo
             return energy;
         else:
-            energy=0
-            print self.protein_number
+            energy=0            
+            partial_energy={}
             for ilist in self.data[self.datatype]:
                 if (ilist[1] == int(self.protein_number[0])) and (self.protein_number[1]=="all"):
                     if ilist[1]!=ilist[2]:
+                        key="%d-%d" % (ilist[1],ilist[2])
+                        try:
+                            partial_energy[key][0]+=1
+                            partial_energy[key][1]+=ilist[-2]
+                        except:
+                            partial_energy[key]=[1,ilist[-2]]
+                            
                         energy+=ilist[-2]
-            return energy
+            partial_energy['all']=energy
+            return partial_energy
             
             
     def _initArg(self):
@@ -53,8 +61,8 @@ class CalcEnergyNinfo(ReadNinfo):
 
         
 if __name__=="__main__":
-    #python calc_energy_ninfo.py ./test/inp/test.ninfo --datatype contact -n 1 *
+    #python calc_energy_ninfo.py ./test/inp/test.ninfo --datatype contact -n 1 all
     test=CalcEnergyNinfo()
-    print "%lf kcal/mol" % test.calc()
+    print test.calc()
 
 
