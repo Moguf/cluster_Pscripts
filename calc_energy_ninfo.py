@@ -16,6 +16,8 @@ class CalcEnergyNinfo(ReadNinfo):
 
 
     def calc(self):
+        # I need to refine this part in future:
+        # I can't calcurate contact 1 2 or 19 29 ...
         if len(self.protein_number)<2:
             energy=0
             for ilist in self.data[self.datatype]:
