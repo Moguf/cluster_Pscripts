@@ -19,7 +19,7 @@ class PlotTs(ReadTs):
         self.inputfile=""           ### you need to input "ts-file".
         self.outfilename="ouput"    ### default is ouput
         self.outfiletype=""         ### for example [png,eps,both]
-        self.outdata=['qscore']     ### for example [qsocre,local, ...]
+        self.datatype=['qscore']     ### for example [qsocre,local, ...]
         self._initArg()
 
 
@@ -37,7 +37,7 @@ class PlotTs(ReadTs):
 
         #for idatatype in self.outdata:
         #I need to change to treat multiple data in future. ex qscore and radg , ..
-        index=self.data['unit'].index(self.outdata[0])
+        index=self.data['unit'].index(self.datatype[0])
         #dict[key] -> list[index]
         
         self.ax.plot(self.data['all'][0],self.data['all'][index])
@@ -45,12 +45,12 @@ class PlotTs(ReadTs):
 
         
     def _setPlotInit(self):
-        for idatatype in self.outdata:
+        for idatatype in self.datatype:
             if idatatype=="qscore":
                 self.ax.set_ylim([0,1])
 
         self.ax.set_xlabel("Step")
-        self.ax.set_ylabel(self.outdata[0])
+        self.ax.set_ylabel(self.datatype[0])
         self.ax.set_title(self.inputfile.split("/")[-1])
         
 
@@ -74,7 +74,7 @@ class PlotTs(ReadTs):
         self.inputfile=self.args.inputfile
         self.outfilename=self.args.output
         self.outfilesuffix=self.args.o
-        self.outdata=self.args.t
+        self.datatype=self.args.t
 
         
 if __name__=="__main__":
