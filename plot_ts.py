@@ -39,10 +39,9 @@ class PlotTs(ReadTs):
         #I need to change to treat multiple data in future. ex qscore and radg , ..
         index=self.data['unit'].index(self.outdata[0])
         #dict[key] -> list[index]
+        
         self.ax.plot(self.data['all'][0],self.data['all'][index])
-            
         self._saveFig()
-        plt.show()
 
         
     def _setPlotInit(self):
