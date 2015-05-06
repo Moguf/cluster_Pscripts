@@ -43,7 +43,8 @@ class ReadTs:
             if key=="unit":
                 continue
             self.data[key]=np.array(self.data[key])
-        self.data['all'].T
+        self.data['all']=self.data['all'].T
+
 
 if __name__=="__main__":
     test=ReadTs()

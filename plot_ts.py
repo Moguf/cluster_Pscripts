@@ -1,4 +1,9 @@
 #!/usr/bin/env python2.7
+"""
+I need to change scripts to treat multiple data.
+Key Ideas: pdf
+
+"""
 import argparse
 import sys
 
@@ -19,24 +24,46 @@ class PlotTs(ReadTs):
 
 
     def main(self):
-        self.read(self.inputfile)
-        self.transposeData()
+        self.read(self.inputfile)   ### ReadTs
+        self.transposeData()        ### ReadTs
         self.plotTs()
 
         
     def plotTs(self):
         fig=plt.figure()
-        ax=fig.add_subplot(111)
-        print self.data
-        for datatype in self.outdata:
-            print self.outdata
-            index=self.data['unit'].index(datatype)
-            print self.data['all'][0]
-            ax.plot(self.data['all'][0],self.data['all'][index])
+        self.ax=fig.add_subplot(111)
+        
+        self._setPlotInit()
 
+        #for idatatype in self.outdata:
+        #I need to change to treat multiple data in future. ex qscore and radg , ..
+        index=self.data['unit'].index(self.outdata[0])
+        #dict[key] -> list[index]
+        self.ax.plot(self.data['all'][0],self.data['all'][index])
+            
+        self._saveFig()
         plt.show()
 
+        
+    def _setPlotInit(self):
+        for idatatype in self.outdata:
+            if idatatype=="qscore":
+                self.ax.set_ylim([0,1])
 
+        self.ax.set_xlabel("Step")
+        self.ax.set_ylabel(self.outdata[0])
+        self.ax.set_title(self.inputfile.split("/")[-1])
+        
+
+    def _saveFig(self):
+        if self.outfilesuffix=="both":
+            plt.savefig(self.outfilename+".eps",fortmat="eps")
+            plt.savefig(self.outfilename+".png",fortmat="png")
+        else:
+            print self.outfilename+"."+self.outfilesuffix
+            plt.savefig(self.outfilename+"."+self.outfilesuffix,fortmat=self.outfilesuffix)
+
+                
     def _initArg(self):
         parser = argparse.ArgumentParser(description='plot ts-data')
         parser.add_argument('inputfile',nargs='?',help="input-file[.ts]")
@@ -47,11 +74,13 @@ class PlotTs(ReadTs):
 
         self.inputfile=self.args.inputfile
         self.outfilename=self.args.output
-        self.outfiletype=self.args.o
+        self.outfilesuffix=self.args.o
         self.outdata=self.args.t
 
         
 if __name__=="__main__":
+    # test command
+    # python plot_ts.py ./test/inp/test.ts ./test/out/test -o eps -t rmsd
     test=PlotTs()
-    test.main()#sys.argv[1],sys.argv[2])
-    #test.main("./test/inp/test.ts")
+    test.main()
+
