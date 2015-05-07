@@ -31,6 +31,7 @@ class MakeCafeJson(CafemolStyleInp):
                    }
 
         jsondict={
+            "BASEDIR":"",
             "inputfile":inputdict,
             "queue":self._makeQueue()
         }
@@ -45,25 +46,25 @@ class MakeCafeJson(CafemolStyleInp):
         _filenamesdict={
             "filename":{
                 "prefix":"",
-                "name":self.filename[-1],
+                "name":self.filename,
                 "index":"",
             },
-            "path":self.path[-1],
-            "output":self.output,
-            "path_pdb":self.path_pdb[-1],
-            "path_ini":self.path_ini[-1],
-            "path_para":self.path_para[-1],
+            "path":self.path,
+            "OUTPUT":self.OUTPUT,
+            "path_pdb":self.path_pdb,
+            "path_ini":self.path_ini,
+            "path_para":self.path_para,
         }
         
         ####optional keys
         if self.path_aicg:
-            _filenamesdict["path_aicg"]=self.path_aicg[-1]
+            _filenamesdict["path_aicg"]=self.path_aicg
 
         if self.path_msf:
-            _filenamesdict["path_msf"]=self.path_msf[-1]
+            _filenamesdict["path_msf"]=self.path_msf
 
         if self.path_natinfo:
-            _filenamesdict["path_natinfo"]=self.path_natinfo[-1]
+            _filenamesdict["path_natinfo"]=self.path_natinfo
         ####
 
         return _filenamesdict
@@ -71,25 +72,25 @@ class MakeCafeJson(CafemolStyleInp):
 
     def _makeJobcntl(self):
         _jobcntldict={
-            "i_run_mode":self.i_run_mode[-1],
-            "i_simulate_type":self.i_simulate_type[-1],
-            "i_initial_state":self.i_initial_state[-1],
+            "i_run_mode":self.i_run_mode,
+            "i_simulate_type":self.i_simulate_type,
+            "i_initial_state":self.i_initial_state,
             }
 
         ####optional keys        
         if self.i_initial_velo:
-            _jobcntldict["i_initial_velo"]=self.i_initial_velo[-1]
+            _jobcntldict["i_initial_velo"]=self.i_initial_velo
         if self.i_periodic:
-            _jobcntldict["i_periodic"]=self.i_periodic[-1]
+            _jobcntldict["i_periodic"]=self.i_periodic
         ####
         return _jobcntldict
         
 
     def _makeUnitandstate(self):
         _unitandstatedict={
-            "i_seq_read_style":self.i_seq_read_style[-1],
-            "i_go_native_read_style":self.i_go_native_read_style[-1],
-            "read_pdb":self.read_pdb[-1],
+            "i_seq_read_style":self.i_seq_read_style,
+            "i_go_native_read_style":self.i_go_native_read_style,
+            "read_pdb":self.read_pdb,
         }
 
         ####optional keys        
@@ -100,20 +101,20 @@ class MakeCafeJson(CafemolStyleInp):
 
     def _makeEnergyfunction(self):
         _energyfunctiondict={
-            "local":self.local,
-            "nlocal":self.nlocal,
-            "i_use_atom_protein":self.i_use_atom_protein[-1]
+            "LOCAL":self.LOCAL,
+            "NLOCAL":self.NLOCAL,
+            "i_use_atom_protein":self.i_use_atom_protein
         }
 
         ####optional keys        
         if self.i_use_atom_dna:
-            _energyfunctiondict["i_use_atom_dna"]=self.i_use_atom_dna[-1]
+            _energyfunctiondict["i_use_atom_dna"]=self.i_use_atom_dna
         if self.i_output_energy_style:
-            _energyfunctiondict["i_output_energy_style"]=self.i_output_energy_style[-1]
+            _energyfunctiondict["i_output_energy_style"]=self.i_output_energy_style
         if self.i_flp:
-            _energyfunctiondict["i_flp"]=self.i_flp[-1]
+            _energyfunctiondict["i_flp"]=self.i_flp
         if self.i_triple_angle_term:
-            _energyfunctiondict["i_triple_angle_term"]=self.i_triple_angle_term[-1]
+            _energyfunctiondict["i_triple_angle_term"]=self.i_triple_angle_term
         ####
 
         return _energyfunctiondict
@@ -121,24 +122,24 @@ class MakeCafeJson(CafemolStyleInp):
 
     def _makeMdinformation(self):
         _mdinformationdict={
-            'n_step_sim':self.n_step_sim[-1],
-            'n_tstep':self.n_tstep[-1],
-            'tstep_size':self.tstep_size[-1],
-            'n_step_save':self.n_step_save[-1],
-            'n_step_neighbor':self.n_step_neighbor[-1],
-            'tempk':self.tempk[-1],
-            'n_seed':self.n_seed[-1],
-            'i_com_zeroing':self.i_com_zeroing[-1],
-            'i_no_trans_rot':self.i_no_trans_rot[-1],
+            'n_step_sim':self.n_step_sim,
+            'n_tstep':self.n_tstep,
+            'tstep_size':self.tstep_size,
+            'n_step_save':self.n_step_save,
+            'n_step_neighbor':self.n_step_neighbor,
+            'tempk':self.tempk,
+            'n_seed':self.n_seed,
+            'i_com_zeroing':self.i_com_zeroing,
+            'i_no_trans_rot':self.i_no_trans_rot,
         }
         
         ####optional keys        
         if self.n_step_rst:
-            _mdinformationdict['n_step_rst']=self.n_step_rst[-1]
+            _mdinformationdict['n_step_rst']=self.n_step_rst
         if self.i_rand_type:
-            _mdinformationdict['i_rand_type']=self.i_rand_type[-1]
+            _mdinformationdict['i_rand_type']=self.i_rand_type
         if self.i_com_zeroing_ini:
-            _mdinformationdict['i_com_zeroing_ini']=self.i_com_zeroing_ini[-1]
+            _mdinformationdict['i_com_zeroing_ini']=self.i_com_zeroing_ini
         ####
         
         return _mdinformationdict
@@ -149,21 +150,21 @@ class MakeCafeJson(CafemolStyleInp):
         
         if self.b_aicg:
             _optblockdict["aicg"]={
-                "i_aicg":self.i_aicg[-1]
+                "i_aicg":self.i_aicg
             }
             
         if self.b_electrostatic:
             _optblockdict["electrostatic"]={
-                "cutoff":self.cutoff[-1],
-                "ionic_strength":self.ionic_strength[-1],
-                "diele_water":self.diele_water[-1],
-                "i_diele":self.diele_water[-1],
+                "cutoff":self.cutoff,
+                "ionic_strength":self.ionic_strength,
+                "diele_water":self.diele_water,
+                "i_diele":self.diele_water,
             }
 
         if self.b_flexible_local:
             _optblockdict["flexible_local"]={
-                "k_dih":self.k_dih[-1],
-                "k_ang":self.k_ang[-1],
+                "k_dih":self.k_dih,
+                "k_ang":self.k_ang,
             }
             
 
