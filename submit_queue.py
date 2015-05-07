@@ -45,6 +45,7 @@ class SubmitQueue:
         self._readMdInformation()
         self._readOptionalBlock()
         
+        self._mkdirOutInp()
         self._makeInputs()
         
         
@@ -207,10 +208,23 @@ class SubmitQueue:
             print "BASEDIR is set to dir(%s)."  % self.BASEDIR
             
 
+    def _mkdirOutInp(self):
+        self.INPDIR=self.BASEDIR+"/"+"inp/"+self.cafestyle.filename["name"]
+        if not os.path.exists(self.INPDIR):
+            print "mkdir "+self.INPDIR
+            os.mkdir(self.INPDIR)
+
+        self.OUTDIR=self.BASEDIR+"/"+"out/"+self.cafestyle.filename["name"]
+        if not os.path.exists(self.OUTDIR):
+            print "mkdir "+self.OUTDIR
+            os.mkdir(self.OUTDIR)
+
+
     def _makeInputs(self):
         looplist=[]
         loopkeys=[]
         ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
+
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):
                 if not ikey in ignorelist:
@@ -224,7 +238,7 @@ class SubmitQueue:
                 outclass.__dict__[key]=str(int(ilist[i]))
                 outclass.filename["index"]+=key[0]+str(ilist[i])
             outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
-            outclass.write(outclass.filename+".inp")
+            outclass.write(self.INPDIR+"/"+outclass.filename+".inp")
 
 
 

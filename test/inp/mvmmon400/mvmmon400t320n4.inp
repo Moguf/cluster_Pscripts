@@ -1,0 +1,42 @@
+<<<< filenames
+filename = mvmmon400t320n4
+path = ~/mvmtrunk/data
+OUTPUT pdb crd dcd psf rst
+path_pdb = ~/mvmtrunk/pdb
+path_ini = ~/mvmtrunk/pdb
+path_para = ~/mvmtrunk/para
+>>>>
+
+<<<< job_cntl
+i_run_mode = 2
+i_simulate_type = 1
+i_initial_state = 2
+>>>>
+
+<<<< unit_and_state
+i_seq_read_style = 1
+i_go_native_read_style = 1
+1-1 protein mvm_mon.pdb
+>>>>
+
+<<<< energy_function
+LOCAL(1-1) L_AICG2_PLUS
+NLOCAL(1-1/1-1) EXV ELE AICG2
+i_use_atom_protein = 0
+i_use_atom_dna = 0
+i_flp = 1
+i_triple_angle_term = 0
+>>>>
+
+<<<< md_information
+n_step_sim = 1
+n_tstep(1) = 100000000
+tstep_size = 0.1
+n_step_save = 1000
+n_step_neighbor = 100
+tempk = 320
+n_seed = 4
+i_com_zeroing = 1
+i_no_trans_rot = 0
+>>>>
+
