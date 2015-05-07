@@ -209,13 +209,23 @@ class SubmitQueue:
 
     def _makeInputs(self):
         looplist=[]
+        loopkeys=[]
         ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):
                 if not ikey in ignorelist:
                     tmplist=self._listsubsitution(self.cafestyle.__dict__[ikey])
                     looplist.append(tmplist)
-                    
+                    loopkeys.append(ikey)
+
+        for ilist in itertools.product(*looplist):
+            outclass=copy.deepcopy(self.cafestyle)
+            for i,key in enumerate(loopkeys):
+                outclass.__dict__[key]=str(int(ilist[i]))
+                outclass.filename["index"]+=key[0]+str(ilist[i])
+            outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
+            outclass.write(outclass.filename+".inp")
+
 
 
     def _listsubsitution(self,inlist):
