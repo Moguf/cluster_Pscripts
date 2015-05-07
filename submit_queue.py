@@ -241,7 +241,6 @@ class SubmitQueue:
             outclass.write(self.INPDIR+"/"+outclass.filename+".inp")
 
 
-
     def _listsubsitution(self,inlist):
         if len(inlist)==1:
             return range(1,inlist[0]+1)
@@ -255,7 +254,6 @@ class SubmitQueue:
         pass
     
     def _determineCount(self):
-        
         pass
 
 

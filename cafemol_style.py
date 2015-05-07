@@ -191,8 +191,27 @@ class CafemolStyleInp:
         otxt+=self._writeContents("i_no_trans_rot")
         otxt+=">>>>\n\n"
         
+        ## optional_block
+        otxt+=self._writeOptionalBlock("b_aicg")
+        otxt+=self._writeOptionalBlock("b_flexible_local")
+        otxt+=self._writeOptionalBlock("b_electrostatic")
+
         ofile.write(otxt)
         ofile.close()
+
+    def _writeOptionalBlock(self,bkey):
+        otxt=""
+        key=bkey[2:]
+        ### bkey is 'b_aicg' , key is aicg
+        print self.__dict__[bkey]
+        if self.__dict__[bkey]:
+            print bkey
+            otxt+="<<<< "+key+"\n"
+            otxt+=">>>>\n\n"
+            return otxt
+        else:
+            return otxt
+    
         
     def _writeContents(self,key):
         ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
