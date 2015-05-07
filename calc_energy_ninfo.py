@@ -30,7 +30,8 @@ class CalcEnergyNinfo(ReadNinfo):
             energy=0            
             partial_energy={}
             for ilist in self.data[self.datatype]:
-                if (ilist[1] == int(self.protein_number[0])) and (self.protein_number[1]=="all"):
+                if (ilist[1] == int(self.protein_number[0]) or ilist[2]==int(self.protein_number[0])) and (self.protein_number[1]=="all"):
+                    #(num1 == 1 or num2 == 1) and (----)
                     if ilist[1]!=ilist[2]:
                         key="%d-%d" % (ilist[1],ilist[2])
                         try:
