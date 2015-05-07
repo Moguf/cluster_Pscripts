@@ -7,6 +7,8 @@ import sys
 import subprocess
 import json
 import os
+import copy
+import itertools
 
 from cafemol_style import CafemolStyleInp
 
@@ -54,7 +56,6 @@ class SubmitQueue:
         self.cafestyle.path_pdb = self.jsondata["inputfile"]["filenames"]["path_pdb"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
         self.cafestyle.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
-
         
         ### optional parts
         if self.jsondata["inputfile"]["filenames"].has_key("path_aicg"):
@@ -63,6 +64,7 @@ class SubmitQueue:
             self.cafestyle.path_msf = self.jsondata["inputfile"]["filenames"]["path_msf"]
         if self.jsondata["inputfile"]["filenames"].has_key("path_natinfo"):
             self.cafestyle.path_natinfo = self.jsondata["inputfile"]["filenames"]["path_natinfo"]        
+            
 
     def _readJobCntl(self):
         self.cafestyle.i_run_mode = self.jsondata["inputfile"]["job_cntl"]["i_run_mode"]
@@ -149,6 +151,7 @@ class SubmitQueue:
         if self.jsondata["inputfile"]["md_information"].has_key("i_modified_muca"):
             self.cafestyle.i_modified_muca = self.jsondata["inputfile"]["md_information"]["i_modified_muca"] 
 
+
     def _readOptionalBlock(self):
         #### aicg 
         if self.b_aicg:
@@ -204,9 +207,25 @@ class SubmitQueue:
             print "BASEDIR is set to dir(%s)."  % self.BASEDIR
             
 
-
     def _makeInputs(self):
-        pass
+        looplist=[]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
+        for ikey in self.cafestyle.__dict__.keys():
+            if isinstance(self.cafestyle.__dict__[ikey],list):
+                if not ikey in ignorelist:
+                    tmplist=self._listsubsitution(self.cafestyle.__dict__[ikey])
+                    looplist.append(tmplist)
+                    
+
+
+    def _listsubsitution(self,inlist):
+        if len(inlist)==1:
+            return range(1,inlist[0]+1)
+        elif len(inlist)==3:
+            return range(int(inlist[0]),int(inlist[1])+int(inlist[2]),int(inlist[2]))
+        else:
+            return inlist
+            
 
     def _submitQueue(self):
         pass

@@ -13,10 +13,10 @@
     "BASEDIR": "./test/", 
     "inputfile": {
         "md_information": {
-            "n_seed": "-1", 
+            "n_seed": [10], 
             "i_no_trans_rot": "0", 
             "n_step_sim": "1", 
-            "tempk": "400.0", 
+            "tempk": [300,400,10], 
             "n_step_save": "1000", 
             "n_step_neighbor": "100", 
             "tstep_size": "0.1", 
