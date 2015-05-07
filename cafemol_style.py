@@ -353,4 +353,4 @@ class CafemolStyleInp:
 if __name__  ==  "__main__":
     test = CafemolStyleInp()
     test.read("./test/inp/test.inp")
-    
+    print "test"
