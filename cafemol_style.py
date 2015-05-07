@@ -27,7 +27,7 @@ class CafemolStyleInp:
         ##filenames contents
         self.filename = False
         self.path = False
-        self.output = False
+        self.OUTPUT = False
         self.path_pdb = False
         self.path_ini = False
         self.path_natinfo = False
@@ -48,8 +48,8 @@ class CafemolStyleInp:
         self.read_pdb = False
 
         ##energy_function
-        self.local = False
-        self.nlocal = False
+        self.LOCAL = False
+        self.NLOCAL = False
         ###I need to refine this data structure###
         self.i_use_atom_protein = False
         self.i_use_atom_dna = False
@@ -102,9 +102,11 @@ class CafemolStyleInp:
 
         
         
-    def main(self):
-        self.read("test.inp")
+    def test(self):
+        self.read("./test/inp/test.inp")
         self.check()
+        self.write("./test/out/testinp.out")
+
 
     def read(self,inpfile):
         ######remove '\n' in each sentence and make list-data
@@ -128,74 +130,77 @@ class CafemolStyleInp:
             raise Exception,"md_infortmation block is not in your input file."
         print " OK !!!"
         
-    def write(self,outfile="./test/out/testinp.out"):
+    def write(self,outfile="testinp.out"):
         ofile=open(outfile,'w')
         otxt=""
 
         ## filenamse Block
         otxt+="<<<< filenames\n"
-        otxt+=self._write_contents(self.filename)
-        otxt+=self._write_contents(self.path)
-        otxt+=self._write_contents(self.output)
-        otxt+=self._write_contents(self.path_pdb)
-        otxt+=self._write_contents(self.path_ini)
-        otxt+=self._write_contents(self.path_natinfo)
-        otxt+=self._write_contents(self.path_aicg)
-        otxt+=self._write_contents(self.path_para)
-        otxt+=self._write_contents(self.path_msf)
+        otxt+=self._writeContents("filename")
+        otxt+=self._writeContents("path")
+        otxt+=self._writeContents("OUTPUT")
+        otxt+=self._writeContents("path_pdb")
+        otxt+=self._writeContents("path_ini")
+        otxt+=self._writeContents("path_natinfo")
+        otxt+=self._writeContents("path_aicg")
+        otxt+=self._writeContents("path_para")
+        otxt+=self._writeContents("path_msf")
         otxt+=">>>>\n\n"
         
         ##job_cntl
         otxt+="<<<< job_cntl\n"
-        otxt+=self._write_contents(self.i_run_mode)
-        otxt+=self._write_contents(self.i_simulate_type)
-        otxt+=self._write_contents(self.i_initial_state)
-        otxt+=self._write_contents(self.i_initial_velo)
-        otxt+=self._write_contents(self.i_periodic)
+        otxt+=self._writeContents("i_run_mode")
+        otxt+=self._writeContents("i_simulate_type")
+        otxt+=self._writeContents("i_initial_state")
+        otxt+=self._writeContents("i_initial_velo")
+        otxt+=self._writeContents("i_periodic")
         otxt+=">>>>\n\n"
         
         ##unit_and_state
         otxt+="<<<< unit_and_state\n"
-        otxt+=self._write_contents(self.i_seq_read_style)
-        otxt+=self._write_contents(self.i_go_native_read_style)
-        otxt+=self._write_contents(self.read_pdb)
+        otxt+=self._writeContents("i_seq_read_style")
+        otxt+=self._writeContents("i_go_native_read_style")
+        otxt+=self._writeContents("read_pdb")
         otxt+=">>>>\n\n"
 
         ##energy_function
         otxt+="<<<< energy_function\n"
-        otxt+=self._write_contents(self.local)
-        otxt+=self._write_contents(self.nlocal)
+        otxt+=self._writeContents("LOCAL")
+        otxt+=self._writeContents("NLOCAL")
         ###I need to refine this data structure###
-        otxt+=self._write_contents(self.i_use_atom_protein)
-        otxt+=self._write_contents(self.i_use_atom_dna)
-        otxt+=self._write_contents(self.i_output_energy_style)
-        otxt+=self._write_contents(self.i_flp)
-        otxt+=self._write_contents(self.i_triple_angle_term)
+        otxt+=self._writeContents("i_use_atom_protein")
+        otxt+=self._writeContents("i_use_atom_dna")
+        otxt+=self._writeContents("i_output_energy_style")
+        otxt+=self._writeContents("i_flp")
+        otxt+=self._writeContents("i_triple_angle_term")
         otxt+=">>>>\n\n"
         
         ##md_information
         otxt+="<<<< md_information\n"
-        otxt+=self._write_contents(self.n_step_sim)
-        otxt+=self._write_contents(self.n_tstep)
-        otxt+=self._write_contents(self.tstep_size)
-        otxt+=self._write_contents(self.n_step_save)
-        otxt+=self._write_contents(self.n_step_rst)
-        otxt+=self._write_contents(self.n_step_neighbor)
-        otxt+=self._write_contents(self.tempk)
-        otxt+=self._write_contents(self.i_rand_type)
-        otxt+=self._write_contents(self.n_seed)
-        otxt+=self._write_contents(self.i_com_zeroing_ini)
-        otxt+=self._write_contents(self.i_com_zeroing)
-        otxt+=self._write_contents(self.i_no_trans_rot)
+        otxt+=self._writeContents("n_step_sim")
+        otxt+=self._writeContents("n_tstep")
+        otxt+=self._writeContents("tstep_size")
+        otxt+=self._writeContents("n_step_save")
+        otxt+=self._writeContents("n_step_rst")
+        otxt+=self._writeContents("n_step_neighbor")
+        otxt+=self._writeContents("tempk")
+        otxt+=self._writeContents("i_rand_type")
+        otxt+=self._writeContents("n_seed")
+        otxt+=self._writeContents("i_com_zeroing_ini")
+        otxt+=self._writeContents("i_com_zeroing")
+        otxt+=self._writeContents("i_no_trans_rot")
         otxt+=">>>>\n\n"
         
-
-        
+        ofile.write(otxt)
         ofile.close()
         
-    def _write_contents(self,_list):
-        if _list:
-            return " ".join(_list)+"\n"
+    def _writeContents(self,key):
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
+        if self.__dict__[key]:
+            if not key in ignorelist:
+                return key+" = "+self.__dict__[key]+"\n"
+            else:
+                return " ".join(self.__dict__[key])+"\n"
         else:
             return ""
         
@@ -244,105 +249,105 @@ class CafemolStyleInp:
             ###print ilist
             ###filenames block
             if re.search(r"^filename$",ilist[0]):
-                self.filename=ilist
+                self.filename=ilist[-1]
             if re.search(r"^path$",ilist[0]):
-                self.path=ilist
+                self.path=ilist[-1]
             if re.search(r"^path_pdb$",ilist[0]):
-                self.path_pdb=ilist
+                self.path_pdb=ilist[-1]
             if re.search(r"^OUTPUT",ilist[0]):
-                self.output=ilist
+                self.OUTPUT=ilist
             if re.search(r"^path_ini$",ilist[0]):
-                self.path_ini=ilist
+                self.path_ini=ilist[-1]
             if re.search(r"^path_natinfo$",ilist[0]):
-                self.path_natinfo=ilist
+                self.path_natinfo=ilist[-1]
             if re.search(r"^path_aicg$",ilist[0]):
-                self.path_aicg=ilist
+                self.path_aicg=ilist[-1]
             if re.search(r"^path_para$",ilist[0]):
-                self.path_para=ilist
+                self.path_para=ilist[-1]
             if re.search(r"^path_msf$",ilist[0]):
-                self.path_msf=ilist
+                self.path_msf=ilist[-1]
 
             ###job_cntl
             if re.search(r"^i_run_mode$",ilist[0]):
-                self.i_run_mode=ilist
+                self.i_run_mode=ilist[-1]
             if re.search(r"^i_simulate_type$",ilist[0]):
-                self.i_simulate_type = ilist
+                self.i_simulate_type = ilist[-1]
             if re.search(r"^i_initial_state$",ilist[0]):
-                self.i_initial_state = ilist
+                self.i_initial_state = ilist[-1]
             if re.search(r"^i_initial_velo$",ilist[0]):
-                self.i_initial_velo = ilist
+                self.i_initial_velo = ilist[-1]
             if re.search(r"^self.i_periodic$",ilist[0]):
-                self.i_periodic = ilist
+                self.i_periodic = ilist[-1]
             
             ###unit_and_state
             if re.search(r"^i_seq_read_style$",ilist[0]):
-                self.i_seq_read_style = ilist
+                self.i_seq_read_style = ilist[-1]
             if re.search(r"^i_go_native_read_style$",ilist[0]):
-                self.i_go_native_read_style = ilist
+                self.i_go_native_read_style = ilist[-1]
             if "protein" in ilist:
                 ####  FUTURE: I need to change this sentence in future.
                 self.read_pdb = ilist
                 
             ##energy_function
             if re.search(r"^LOCAL",ilist[0]):
-                self.local=ilist
+                self.LOCAL=ilist
             if re.search(r"^NLOCAL",ilist[0]):
-                self.nlocal=ilist
+                self.NLOCAL=ilist
             if re.search(r"^i_use_atom_protein$",ilist[0]):
-                self.i_use_atom_protein = ilist
+                self.i_use_atom_protein = ilist[-1]
             if re.search(r"^i_use_atom_dna$",ilist[0]):
-                self.i_use_atom_dna = ilist
+                self.i_use_atom_dna = ilist[-1]
             if re.search(r"^i_output_energy_style$",ilist[0]):
-                self.i_output_energy_style = ilist
+                self.i_output_energy_style = ilist[-1]
             if re.search(r"^i_flp$",ilist[0]):
-                self.i_flp = ilist
+                self.i_flp = ilist[-1]
             if re.search(r"^i_triple_angle_term$",ilist[0]):
-                self.i_triple_angle_term = ilist
+                self.i_triple_angle_term = ilist[-1]
                 
             ##md_information
             if re.search(r"^n_step_sim$",ilist[0]):
-                self.n_step_sim = ilist
+                self.n_step_sim = ilist[-1]
             if re.search(r"^n_tstep",ilist[0]):
                 self.n_tstep = ilist
             if re.search(r"^tstep_size$",ilist[0]):
-                self.tstep_size = ilist
+                self.tstep_size = ilist[-1]
             if re.search(r"^n_step_save$",ilist[0]):
-                self.n_step_save = ilist
+                self.n_step_save = ilist[-1]
             if re.search(r"^n_step_rst$",ilist[0]):
-                self.n_step_rst = ilist
+                self.n_step_rst = ilist[-1]
             if re.search(r"^n_step_neighbor$",ilist[0]):
-                self.n_step_neighbor = ilist
+                self.n_step_neighbor = ilist[-1]
             if re.search(r"^tempk$",ilist[0]):
-                self.tempk = ilist
+                self.tempk = ilist[-1]
             if re.search(r"^i_rand_type$",ilist[0]):
-                self.i_rand_type = ilist
+                self.i_rand_type = ilist[-1]
             if re.search(r"^n_seed$",ilist[0]):
-                self.n_seed = ilist
+                self.n_seed = ilist[-1]
             if re.search(r"^i_com_zeroing_ini$",ilist[0]):
-                self.i_com_zeroing_ini = ilist
+                self.i_com_zeroing_ini = ilist[-1]
             if re.search(r"^i_com_zeroing$",ilist[0]):
-                self.i_com_zeroing = ilist
+                self.i_com_zeroing = ilist[-1]
             if re.search(r"^i_no_trans_rot$",ilist[0]):
-                self.i_no_trans_rot = ilist
+                self.i_no_trans_rot = ilist[-1]
 
             ##### optional blocks
             ###### aicg
             if re.search(r"^i_aicg$",ilist[0]):
-                self.i_aicg = ilist
+                self.i_aicg = ilist[-1]
             ###### electrostatic
             if re.search(r"^cutoff$",ilist[0]):
-                self.cutoff = ilist
+                self.cutoff = ilist[-1]
             if re.search(r"^ionic_strength$",ilist[0]):
-                self.ionic_strength = ilist
+                self.ionic_strength = ilist[-1]
             if re.search(r"^diele_water$",ilist[0]):
-                self.diele_water = ilist
+                self.diele_water = ilist[-1]
             if re.search(r"^i_diele$",ilist[0]):
-                self.i_diele = ilist
+                self.i_diele = ilist[-1]
             ###### flexible_local
             if re.search(r"^k_dih$",ilist[0]):
-                self.k_dih = ilist
+                self.k_dih = ilist[-1]
             if re.search(r"^k_ang$",ilist[0]):
-                self.k_ang = ilist
+                self.k_ang = ilist[-1]
 
 
     def show(self):
@@ -352,5 +357,5 @@ class CafemolStyleInp:
             
 if __name__  ==  "__main__":
     test = CafemolStyleInp()
-    test.read("./test/inp/test.inp")
-    print "test"
+    test.test()
+
