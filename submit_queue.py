@@ -32,6 +32,12 @@ class SubmitQueue:
         self.template_file=CafemolStyleInp()
 
         self._readFilenames()
+        self._readJobCntl()
+        self._readEnergyFunction()
+        self._readFilenames()
+        self._readFilenames()
+
+
 
         self.template_file.show()
         
