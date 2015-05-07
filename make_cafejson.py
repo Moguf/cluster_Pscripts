@@ -26,7 +26,7 @@ class MakeCafeJson(CafemolStyleInp):
                    "job_cntl":self._makeJobcntl(),
                    "unit_and_state":self._makeUnitandstate(),
                    "energy_function":self._makeEnergyfunction(),
-                   "md_infortmation":self._makeMdinformation(),
+                   "md_information":self._makeMdinformation(),
                    "optional_block":self._makeOptBlock()
                    }
 

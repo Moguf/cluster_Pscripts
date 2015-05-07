@@ -92,13 +92,13 @@ class SubmitQueue:
 
 
     def _readUnitAndState(self):
-        self.cafestyle.i_seq_read_style = False
-        self.cafestyle.i_go_native_read_style = False
-        self.cafestyle.read_pdb = False
+        self.cafestyle.i_seq_read_style = self.jsondata["inputfile"]["unit_and_state"]["i_seq_read_style"]
+        self.cafestyle.i_go_native_read_style = self.jsondata["inputfile"]["unit_and_state"]["i_go_native_read_style"]
+        self.cafestyle.read_pdb = self.jsondata["inputfile"]["unit_and_state"]["read_pdb"]
 
 
     def _readMdInformation(self):
-        self.cafestyle.n_step_sim = False
+        self.cafestyle.n_step_sim = self.jsondata["inputfile"]["mf_information"]["read_pdb"] 
         self.cafestyle.n_tstep = False
         self.cafestyle.tstep_size = False
         self.cafestyle.n_step_save = False
@@ -110,6 +110,7 @@ class SubmitQueue:
         self.cafestyle.i_com_zeroing_ini = False
         self.cafestyle.i_com_zeroing = False
         self.cafestyle.i_no_trans_rot = False
+        
         ####optional parameters
         self.cafestyle.i_implig = False
         self.cafestyle.i_redef_para = False
