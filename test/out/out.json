@@ -12,6 +12,21 @@
     }, 
     "BASEDIR": "", 
     "inputfile": {
+        "md_information": {
+            "n_seed": "-1", 
+            "i_no_trans_rot": "0", 
+            "n_step_sim": "1", 
+            "tempk": "400.0", 
+            "n_step_save": "1000", 
+            "n_step_neighbor": "100", 
+            "tstep_size": "0.1", 
+            "i_com_zeroing": "1", 
+            "n_tstep": [
+                "n_tstep(1)", 
+                "=", 
+                "100000000"
+            ]
+        }, 
         "job_cntl": {
             "i_run_mode": "2", 
             "i_initial_state": "2", 
@@ -74,21 +89,6 @@
                 "1-1", 
                 "protein", 
                 "mvm_mon.pdb"
-            ]
-        }, 
-        "md_infortmation": {
-            "n_seed": "-1", 
-            "i_no_trans_rot": "0", 
-            "n_step_sim": "1", 
-            "tempk": "400.0", 
-            "n_step_save": "1000", 
-            "n_step_neighbor": "100", 
-            "tstep_size": "0.1", 
-            "i_com_zeroing": "1", 
-            "n_tstep": [
-                "n_tstep(1)", 
-                "=", 
-                "100000000"
             ]
         }
     }

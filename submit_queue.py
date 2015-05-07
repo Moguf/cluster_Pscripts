@@ -98,37 +98,57 @@ class SubmitQueue:
 
 
     def _readMdInformation(self):
-        self.cafestyle.n_step_sim = self.jsondata["inputfile"]["mf_information"]["read_pdb"] 
-        self.cafestyle.n_tstep = False
-        self.cafestyle.tstep_size = False
-        self.cafestyle.n_step_save = False
-        self.cafestyle.n_step_rst = False
-        self.cafestyle.n_step_neighbor = False
-        self.cafestyle.tempk = False
-        self.cafestyle.i_rand_type = False
-        self.cafestyle.n_seed = False
-        self.cafestyle.i_com_zeroing_ini = False
-        self.cafestyle.i_com_zeroing = False
-        self.cafestyle.i_no_trans_rot = False
-        
-        ####optional parameters
-        self.cafestyle.i_implig = False
-        self.cafestyle.i_redef_para = False
-        self.cafestyle.i_energy_para = False
-        self.cafestyle.i_neigh_dist = False
-        self.cafestyle.i_mass = False
-        self.cafestyle.i_fric = False
-        self.cafestyle.i_mass_fric = False
-        self.cafestyle.i_del_int = False
-        self.cafestyle.i_anchor = False
-        self.cafestyle.i_rest1d = False
-        self.cafestyle.i_bridge = False
-        self.cafestyle.i_pulling = False
-        self.cafestyle.i_fix = False
-        self.cafestyle.i_in_box = False
-        self.cafestyle.i_in_cap = False
-        self.cafestyle.i_modified_muca = False
+        self.cafestyle.n_step_sim = self.jsondata["inputfile"]["md_information"]["n_step_sim"] 
+        self.cafestyle.n_tstep = self.jsondata["inputfile"]["md_information"]["n_tstep"] 
+        self.cafestyle.tstep_size = self.jsondata["inputfile"]["md_information"]["tstep_size"] 
+        self.cafestyle.n_step_save = self.jsondata["inputfile"]["md_information"]["n_step_save"] 
 
+        self.cafestyle.n_step_neighbor = self.jsondata["inputfile"]["md_information"]["n_step_neighbor"]
+        self.cafestyle.tempk = self.jsondata["inputfile"]["md_information"]["tempk"] 
+        self.cafestyle.n_seed = self.jsondata["inputfile"]["md_information"]["n_seed"] 
+        self.cafestyle.i_com_zeroing = self.jsondata["inputfile"]["md_information"]["i_com_zeroing"] 
+        self.cafestyle.i_no_trans_rot = self.jsondata["inputfile"]["md_information"]["i_no_trans_rot"] 
+        
+
+        ####optional parameters
+        if self.jsondata["inputfile"]["md_information"].has_key("i_com_zeroing_ini"):
+            self.cafestyle.i_com_zeroing_ini = self.jsondata["inputfile"]["md_information"]["i_com_zeroing_ini"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_rand_type"):
+            self.cafestyle.i_rand_type = self.jsondata["inputfile"]["md_information"]["i_rand_type"]
+        if self.jsondata["inputfile"]["md_information"].has_key("n_step_rst"):
+            self.cafestyle.n_step_rst = self.jsondata["inputfile"]["md_information"]["n_step_rst"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_implig"):
+            self.cafestyle.i_implig = self.jsondata["inputfile"]["md_information"]["i_implig"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_redef_para"):
+            self.cafestyle.i_redef_para = self.jsondata["inputfile"]["md_information"]["i_redef_para"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_energy_para"):
+            self.cafestyle.i_energy_para = self.jsondata["inputfile"]["md_information"]["i_energy_para"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_neigh_dist"):
+            self.cafestyle.i_neigh_dist = self.jsondata["inputfile"]["md_information"]["i_neigh_dist"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_mass"):
+            self.cafestyle.i_mass = self.jsondata["inputfile"]["md_information"]["i_mass"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_fric"):
+            self.cafestyle.i_fric = self.jsondata["inputfile"]["md_information"]["i_fric"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_mass_fric"):
+            self.cafestyle.i_mass_fric = self.jsondata["inputfile"]["md_information"]["i_mass_fric"]
+        if self.jsondata["inputfile"]["md_information"].has_key("i_del_int"): 
+            self.cafestyle.i_del_int = self.jsondata["inputfile"]["md_information"]["i_del_int"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_anchor"):
+            self.cafestyle.i_anchor = self.jsondata["inputfile"]["md_information"]["i_anchor"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_rest1d"):
+            self.cafestyle.i_rest1d = self.jsondata["inputfile"]["md_information"]["i_rest1d"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_bridge"):
+            self.cafestyle.i_bridge = self.jsondata["inputfile"]["md_information"]["i_bridge"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_pulling"):
+            self.cafestyle.i_pulling = self.jsondata["inputfile"]["md_information"]["i_pulling"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_fix"):
+            self.cafestyle.i_fix = self.jsondata["inputfile"]["md_information"]["i_fix"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_in_box"):
+            self.cafestyle.i_in_box = self.jsondata["inputfile"]["md_information"]["i_in_box"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_in_cap"):
+            self.cafestyle.i_in_cap = self.jsondata["inputfile"]["md_information"]["i_in_cap"] 
+        if self.jsondata["inputfile"]["md_information"].has_key("i_modified_muca"):
+            self.cafestyle.i_modified_muca = self.jsondata["inputfile"]["md_information"]["i_modified_muca"] 
 
     def _readOptionalBlock(self):
         self.cafestyle.i_aicg = False
