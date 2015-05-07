@@ -48,12 +48,13 @@ class SubmitQueue:
         txtlist=[]
         self.cafestyle.filename=self.jsondata["inputfile"]["filenames"]["filename"]
         self.cafestyle.path = self.jsondata["inputfile"]["filenames"]["path"]
-        self.cafestyle.output = self.jsondata["inputfile"]["filenames"]["output"]
+        self.cafestyle.OUTPUT = self.jsondata["inputfile"]["filenames"]["OUTPUT"]
         self.cafestyle.path_pdb = self.jsondata["inputfile"]["filenames"]["path_pdb"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
         self.cafestyle.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
 
         
+        ### optional parts
         if self.jsondata["inputfile"]["filenames"].has_key("path_aicg"):
             self.cafestyle.path_aicg = self.jsondata["inputfile"]["filenames"]["path_aicg"]
         if self.jsondata["inputfile"]["filenames"].has_key("path_msf"):
@@ -62,22 +63,32 @@ class SubmitQueue:
             self.cafestyle.path_natinfo = self.jsondata["inputfile"]["filenames"]["path_natinfo"]        
 
     def _readJobCntl(self):
-        self.cafestyle.i_run_mode = False
-        self.cafestyle.i_simulate_type = False
-        self.cafestyle.i_initial_state = False
-        self.cafestyle.i_initial_velo = False
-        self.cafestyle.i_periodic = False
+        self.cafestyle.i_run_mode = self.jsondata["inputfile"]["job_cntl"]["i_run_mode"]
+        self.cafestyle.i_simulate_type = self.jsondata["inputfile"]["job_cntl"]["i_simulate_type"]
+        self.cafestyle.i_initial_state = self.jsondata["inputfile"]["job_cntl"]["i_initial_state"]
+
+        ### optional parts
+        if self.jsondata["inputfile"]["job_cntl"].has_key("i_initial_velo"):
+            self.cafestyle.i_initial_velo = self.jsondata["inputfile"]["job_cntl"]["i_initial_velo"]
+        if self.jsondata["inputfile"]["job_cntl"].has_key("i_periodic"):
+            self.cafestyle.i_periodic = self.jsondata["inputfile"]["job_cntl"]["i_periodic"]
 
 
     def _readEnergyFunction(self):
-        self.cafestyle.LOCAL = False
-        self.cafestyle.NLOCAL = False
+        self.cafestyle.LOCAL = self.jsondata["inputfile"]["energy_function"]["LOCAL"]
+        self.cafestyle.NLOCAL = self.jsondata["inputfile"]["energy_function"]["NLOCAL"]
+        self.cafestyle.i_use_atom_protein = self.jsondata["inputfile"]["energy_function"]["i_use_atom_protein"]
+
+
         ###I need to refine this data structure###
-        self.cafestyle.i_use_atom_protein = False
-        self.cafestyle.i_use_atom_dna = False
-        self.cafestyle.i_output_energy_style = False
-        self.cafestyle.i_flp = False
-        self.cafestyle.i_triple_angle_term = False
+        if self.jsondata["inputfile"]["energy_function"].has_key("i_use_atom_dna"):
+            self.cafestyle.i_use_atom_dna = self.jsondata["inputfile"]["energy_function"]["i_use_atom_dna"]
+        if self.jsondata["inputfile"]["energy_function"].has_key("i_output_energy_style"):
+            self.cafestyle.i_output_energy_style = self.jsondata["inputfile"]["energy_function"]["i_output_energy_style"]
+        if self.jsondata["inputfile"]["energy_function"].has_key("i_flp"):
+            self.cafestyle.i_flp = self.jsondata["inputfile"]["energy_function"]["i_flp"]
+        if self.jsondata["inputfile"]["energy_function"].has_key("i_triple_angle_term"):
+            self.cafestyle.i_triple_angle_term = self.jsondata["inputfile"]["energy_function"]["i_triple_angle_term"]
 
 
     def _readUnitAndState(self):
