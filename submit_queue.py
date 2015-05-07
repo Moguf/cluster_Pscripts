@@ -31,15 +31,17 @@ class SubmitQueue:
         self.jsondata["inputfile"]
         self.template_file=CafemolStyleInp()
 
+        self._checkBlock()
+        self._checkDir()
+
         self._readFilenames()
         self._readJobCntl()
         self._readEnergyFunction()
-        self._readFilenames()
-        self._readFilenames()
+        self._readUnitAndState()
+        self._readMdInformation()
+        self._readOptionalBlock()
 
 
-
-        self.template_file.show()
         
     def _readFilenames(self):
         txtlist=[]
@@ -52,8 +54,8 @@ class SubmitQueue:
         self.template.path_aicg = self.jsondata["inputfile"]["filenames"]["path_aicg"]
         self.template.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
         self.template.path_msf = self.jsondata["inputfile"]["filenames"]["path_msf"]
-
         
+
     def _readJobCntl(self):
         pass
 
@@ -72,6 +74,12 @@ class SubmitQueue:
     def _makeShFile(self):
         _shfdata=self.jsondata["queue"]
 
+
+    def _checkBlock(self):
+        pass
+        
+    def _checkDir(self):
+        pass
 
     def _submitQueue(self):
         pass
