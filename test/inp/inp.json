@@ -10,7 +10,7 @@
         "9": "./cafemol ./inp/test.inp", 
         "8": "OMP_NUM_THREADS ="
     }, 
-    "BASEDIR": "", 
+    "BASEDIR": "./test/", 
     "inputfile": {
         "md_information": {
             "n_seed": "-1", 

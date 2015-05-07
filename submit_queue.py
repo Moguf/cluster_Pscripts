@@ -20,7 +20,8 @@ class SubmitQueue:
         #If there is a list in json, iterlist.the list).
         
         self.BASEDIR=""
-        self.WORKDIR=""
+        self.OUTDIR=""
+        self.INPDIR=""
 
 
     def main(self):
@@ -33,7 +34,7 @@ class SubmitQueue:
         self.cafestyle=CafemolStyleInp()
         
         self._checkBlock()
-        #self._checkDir()
+        self._checkBasedir()
 
         self._readFilenames()
         self._readJobCntl()
@@ -41,8 +42,9 @@ class SubmitQueue:
         self._readUnitAndState()
         self._readMdInformation()
         self._readOptionalBlock()
-
-
+        
+        self._makeInputs()
+        
         
     def _readFilenames(self):
         txtlist=[]
@@ -78,9 +80,7 @@ class SubmitQueue:
         self.cafestyle.LOCAL = self.jsondata["inputfile"]["energy_function"]["LOCAL"]
         self.cafestyle.NLOCAL = self.jsondata["inputfile"]["energy_function"]["NLOCAL"]
         self.cafestyle.i_use_atom_protein = self.jsondata["inputfile"]["energy_function"]["i_use_atom_protein"]
-
-
-        ###I need to refine this data structure###
+        ### optional parts
         if self.jsondata["inputfile"]["energy_function"].has_key("i_use_atom_dna"):
             self.cafestyle.i_use_atom_dna = self.jsondata["inputfile"]["energy_function"]["i_use_atom_dna"]
         if self.jsondata["inputfile"]["energy_function"].has_key("i_output_energy_style"):
@@ -109,7 +109,6 @@ class SubmitQueue:
         self.cafestyle.i_com_zeroing = self.jsondata["inputfile"]["md_information"]["i_com_zeroing"] 
         self.cafestyle.i_no_trans_rot = self.jsondata["inputfile"]["md_information"]["i_no_trans_rot"] 
         
-
         ####optional parameters
         if self.jsondata["inputfile"]["md_information"].has_key("i_com_zeroing_ini"):
             self.cafestyle.i_com_zeroing_ini = self.jsondata["inputfile"]["md_information"]["i_com_zeroing_ini"] 
@@ -151,15 +150,19 @@ class SubmitQueue:
             self.cafestyle.i_modified_muca = self.jsondata["inputfile"]["md_information"]["i_modified_muca"] 
 
     def _readOptionalBlock(self):
-        self.cafestyle.i_aicg = False
+        #### aicg 
+        if self.b_aicg:
+            self.cafestyle.i_aicg = self.jsondata["inputfile"]["optional_block"]["aicg"]["i_aicg"]
         #### electrostatic
-        self.cafestyle.cutoff = False
-        self.cafestyle.ionic_strength = False
-        self.cafestyle.diele_water = False
-        self.cafestyle.i_diele= False
+        if self.b_electrostatic:
+            self.cafestyle.cutoff = self.jsondata["inputfile"]["optional_block"]["electrostatic"]["cutoff"]
+            self.cafestyle.ionic_strength = self.jsondata["inputfile"]["optional_block"]["electrostatic"]["ionic_strength"]
+            self.cafestyle.diele_water = self.jsondata["inputfile"]["optional_block"]["electrostatic"]["diele_water"]
+            self.cafestyle.i_diele= self.jsondata["inputfile"]["optional_block"]["electrostatic"]["i_diele"]
         #### flexible_local
-        self.cafestyle.k_dih = False
-        self.cafestyle.k_ang = False
+        if self.b_flexible_local:
+            self.cafestyle.k_dih = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_dih"]
+            self.cafestyle.k_ang = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_ang"]
 
         
     def _makeShFile(self):
@@ -170,15 +173,15 @@ class SubmitQueue:
         print "check Block ...",
 
         self.b_filenames = self.jsondata["inputfile"].has_key("filenames")
-        self.b_job_cntl = self.jsondata["inputfile"].has_key("filenames")
-        self.b_unit_and_state = self.jsondata["inputfile"].has_key("filenames")
-        self.b_energy_function = self.jsondata["inputfile"].has_key("filenames")
-        self.b_md_information = self.jsondata["inputfile"].has_key("filenames")
+        self.b_job_cntl = self.jsondata["inputfile"].has_key("job_cntl")
+        self.b_unit_and_state = self.jsondata["inputfile"].has_key("unit_and_state")
+        self.b_energy_function = self.jsondata["inputfile"].has_key("energy_function")
+        self.b_md_information = self.jsondata["inputfile"].has_key("md_information")
 
         ##optional flag
-        self.b_electrostatic = self.jsondata["inputfile"]["optional_block"].has_key("filenames")
-        self.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("filenames")
-        self.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("filenames")
+        self.b_electrostatic = self.jsondata["inputfile"]["optional_block"].has_key("electrostatic")
+        self.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("flexible_local")
+        self.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("aicg")
         
         if not (self.b_filenames and \
            self.b_job_cntl and \
@@ -190,7 +193,19 @@ class SubmitQueue:
         print " OK!!!"
 
 
-    def _checkDir(self):
+    def _checkBasedir(self):
+        self.BASEDIR=self.jsondata["BASEDIR"]
+        if not self.BASEDIR:
+            self.BASEDIR=os.path.os.path.abspath(os.path.dirname(__file__))
+            print "BASEDIR is set to current dir(%s)."  % self.BASEDIR
+        else:
+            tmp=self.jsondata["BASEDIR"]
+            self.BASEDIR=os.path.os.path.abspath(os.path.expanduser(tmp))
+            print "BASEDIR is set to dir(%s)."  % self.BASEDIR
+            
+
+
+    def _makeInputs(self):
         pass
 
     def _submitQueue(self):
