@@ -37,6 +37,7 @@ class JsonToCafeinp:
         self._readMdInformation()
         self._readOptionalBlock()
 
+        self.cafestyle.path = self.OUTDIR
 
     def makeInps(self):
         self._mkdirOutInp()
@@ -45,7 +46,6 @@ class JsonToCafeinp:
 
     def _readFilenames(self):
         self.cafestyle.filename=self.jsondata["inputfile"]["filenames"]["filename"]
-        self.cafestyle.path = self.jsondata["inputfile"]["filenames"]["path"]
         self.cafestyle.OUTPUT = self.jsondata["inputfile"]["filenames"]["OUTPUT"]
         self.cafestyle.path_pdb = self.jsondata["inputfile"]["filenames"]["path_pdb"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
@@ -201,7 +201,7 @@ class JsonToCafeinp:
             print "mkdir "+self.INPDIR
             os.mkdir(self.INPDIR)
 
-        self.OUTDIR=self.BASEDIR+"/"+"out/"+self.cafestyle.filename["name"]
+        self.OUTDIR=self.BASEDIR+"/"+"data/"+self.cafestyle.filename["name"]
         if not os.path.exists(self.OUTDIR):
             print "mkdir "+self.OUTDIR
             os.mkdir(self.OUTDIR)

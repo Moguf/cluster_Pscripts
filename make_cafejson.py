@@ -1,8 +1,10 @@
-#!/usr/bin/env python2
+#!/rei_fs1/ono/python/bin/python
 #coding:utf-8
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.
+
 import json
+import sys
 import argparse
 import os
 
@@ -22,7 +24,7 @@ class MakeCafeJson(CafemolStyleInp):
         self.makeJson()
         
 
-    def makeJson(self,outjson="./test/out/out.json"):
+    def makeJson(self,outjson="./out.json"):
         inputdict={"filenames":self._makeFilnames(),
                    "job_cntl":self._makeJobcntl(),
                    "unit_and_state":self._makeUnitandstate(),
