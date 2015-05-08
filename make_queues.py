@@ -4,12 +4,13 @@
 #This script makes input files and submits queue.
 import os
 import argparse
+import subprocess
+
 
 class MakeQueue:
     def __init__(self):
         self.core=1
         self.name="test"
-        self.logdir=""
         self.queue=""
         self.exedir=""
         self.inpdir=""
@@ -18,19 +19,18 @@ class MakeQueue:
     def write(self,ofile="test.sh"):
         wfile=open(ofile,'w')
         otxt=""
-        otxt+="""#!/bin/sh
-        #$ -S /bin/sh
-        #$ -cwd
-        #$ -V
-        """
+        otxt+="#!/bin/sh\n\n"
+        otxt+="#$ -S /bin/sh\n"
+        otxt+="#$ -cwd\n"
+        otxt+="#$ -V\n"
         otxt+="#$ -N "+self.name+"\n"
-        otxt+="#$ -o "+self.logdir+"/log"+self.name+".log"+"\n"
-        otxt+="#$ -e "+self.logdir+"/log"+self.name+".err"+"\n"
+        otxt+="#$ -o "+self.inpdir+"log/"+self.name+".log"+"\n"
+        otxt+="#$ -e "+self.inpdir+"err/"+self.name+".err"+"\n"
         otxt+="#$ -q "+self.queue+"\n"
         otxt+="#$ -pe smp "+str(self.core)+"\n\n"
 
         otxt+="OMP_NUM_THREADS="+str(self.core)+"\n"
-        otxt+=exedir+"cafemol"+" "+inpdir+self.name+".inp"+"\n"
+        otxt+=self.exedir+"cafemol"+" "+self.inpdir+self.name+".inp"+"\n"
 
         wfile.write(otxt)
         wfile.close()
@@ -43,27 +43,66 @@ class MakeQueue:
 class MakeQueues:
     def __init__(self):
         self.WORKDIR=""
+        self.exedir=""
+        self.core="1"
+        self.queue="all.q"
 
-    def main(self):
+
+    def test(self):
         self._initArg()
-        self._checkArg()
+        self.mkdirErrLog()
+        self.makeShfiles()
+
+
+    def makeShfiles(self):
+        cmdline="ls "+self.WORKDIR+"*.inp"
+        inplist=subprocess.check_output([cmdline],shell=True).split()
+        queue=MakeQueue()
+        queue.exedir=self.exedir
+        queue.core=self.core
+        queue.inpdir=self.WORKDIR
+
+        for iinp in inplist:
+            inpname=iinp.split('/')[-1].split('.')[0]
+            queue.name=inpname
+            queue.write(self.WORKDIR+inpname+".sh")
+    
+
+    def setQueue(self,num):
+        self.queue=str(num)
+
+
+    def setCore(self,num):
+        self.core=str(num)
+
+        
+    def mkdirErrLog(self):
+        if not os.path.exists(self.WORKDIR+"log"):
+            os.mkdir(self.WORKDIR+"log")
+        if not os.path.exists(self.WORKDIR+"err"):
+            os.mkdir(self.WORKDIR+"err")
+
+
+    def setWORKDIR(self,workdir):
+        if workdir[-1]!='/':
+            workdir=workdir+'/'
+        if workdir[0]!='/':
+            workdir='/'+workdir
+        
+        self.WORKDIR=os.path.dirname(os.path.abspath(__file__))+workdir
+        print "WORKDIR is set to "+self.WORKDIR
+
+        if not os.path.exists(self.WORKDIR):
+            raise Exception("CAUTION!! Check input directory path.")
+
 
     def _initArg(self):
         parser = argparse.ArgumentParser(description='make queue.sh')
         parser.add_argument('inputdir',nargs='?',help="input dir-path which has cafemol-inputsfile[.inp]")
-        self.args = parser.parse_args()
-        
-    def _checkArg(self):
-        if self.args.inputdir[-1]!='/':
-            self.args.inputdir=self.args.inputdir+'/'
-        if self.args.inputdir[0]!='/':
-            self.args.inputdir='/'+self.args.inputdir
-        
-        print os.path.dirname(os.path.abspath(__file__))+self.args.inputdir
-        os.path.exists(self.WORKDIR)
+        self.setWORKDIR(parser.parse_args().inputdir)
 
 
 if __name__=="__main__":
     ###python make_queues.py test/inp/mvmmon400/
     test=MakeQueues()
-    test.main()
+    test.test()
