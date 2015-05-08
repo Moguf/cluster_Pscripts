@@ -4,6 +4,7 @@
 #This script makes input files and submits queue.
 import json
 import subprocess
+import sys
 
 from json_to_cafeinp import JsonToCafeinp
 from make_queues import MakeQueues
@@ -41,9 +42,10 @@ class SubmitQueue:
         
         for iqsub in qsublist:
             exe=["qsub",iqsub]
-            subprocess.Popen(exe)
+            print " ".join(exe)
+            #subprocess.Popen(exe)
 
 if __name__ == "__main__":
-    test=SubmitQueue('./test/inp/inp.json')
+    test=SubmitQueue(sys.argv[1])
     test.main()
     
