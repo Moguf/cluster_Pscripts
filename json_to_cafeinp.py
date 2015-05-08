@@ -1,33 +1,29 @@
 #!/usr/bin/env python2.7
 #coding:utf-8
 #editor:ono
-#This script makes input files and submits queue.
-
-import sys
-import subprocess
+#This script makes input files from cafe_json
 import json
 import os
-import copy
 import itertools
+import copy
 
 from cafemol_style import CafemolStyleInp
 
-class SubmitQueue:
-    def __init__(self,inpfile):
-        _jdata=open(inpfile,"r")
-        self.jsondata=json.load(_jdata)
-        
+class JsonToCafeinp:
+    def __init__(self,injson):
+        self.jsondata=json.load(open(injson))
+
         self.BASEDIR=""
         self.OUTDIR=""
         self.INPDIR=""
 
 
     def main(self):
-        self._makeInputFile()
-        self._submitQueue()
+        self.read()
+        self.makeInps()
 
 
-    def _makeInputFile(self):
+    def read(self):
         self.jsondata["inputfile"]
         self.cafestyle=CafemolStyleInp()
         
@@ -40,11 +36,13 @@ class SubmitQueue:
         self._readUnitAndState()
         self._readMdInformation()
         self._readOptionalBlock()
-        
+
+
+    def makeInps(self):
         self._mkdirOutInp()
         self._makeInputs()
         
-        
+
     def _readFilenames(self):
         self.cafestyle.filename=self.jsondata["inputfile"]["filenames"]["filename"]
         self.cafestyle.path = self.jsondata["inputfile"]["filenames"]["path"]
@@ -162,12 +160,6 @@ class SubmitQueue:
         if self.b_flexible_local:
             self.cafestyle.k_dih = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_dih"]
             self.cafestyle.k_ang = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_ang"]
-
-        
-    def _makeShFile(self):
-        _shfdata=self.jsondata["queue"]
-
-
     def _checkBlock(self):
         print "check Block ...",
 
@@ -243,16 +235,10 @@ class SubmitQueue:
             return range(int(inlist[0]),int(inlist[1])+int(inlist[2]),int(inlist[2]))
         else:
             return inlist
-            
-
-    def _submitQueue(self):
-        pass
-    
-    def _determineCount(self):
-        pass
-
 
 if __name__ == "__main__":
-    test=SubmitQueue('./test/inp/inp.json')
+    test=JsonToCafeinp('./test/inp/inp.json')
     test.main()
-    
+
+                                                                                            
+                                                                                                
