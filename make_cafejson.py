@@ -158,7 +158,7 @@ class MakeCafeJson(CafemolStyleInp):
                 "cutoff":self.cutoff,
                 "ionic_strength":self.ionic_strength,
                 "diele_water":self.diele_water,
-                "i_diele":self.diele_water,
+                "i_diele":self.i_diele,
             }
 
         if self.b_flexible_local:

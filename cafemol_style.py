@@ -208,6 +208,7 @@ class CafemolStyleInp:
             ### because of I don't have to use if-sentence.
             ### I have only to use for-sentence.
             otxt+="<<<< "+key+"\n"
+
             if bkey=="b_aicg":
                 otxt+=self._writeContents("i_aicg")
             elif bkey=="b_electrostatic":

@@ -15,18 +15,15 @@ class SubmitQueue:
         makeinputs.read()
         makeinputs.makeInps()
 
+
+        self.__makeQueue()
         self._submitQueue()
 
-    def _makeShFile(self):
-        _shfdata=self.jsondata["queue"]
-
-
+    def _makeQueue(self):
+        pass
+        
     def _submitQueue(self):
         pass
-    
-    def _determineCount(self):
-        pass
-
 
 if __name__ == "__main__":
     test=SubmitQueue('./test/inp/inp.json')
