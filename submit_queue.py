@@ -3,6 +3,7 @@
 #editor:ono
 #This script makes input files and submits queue.
 import json
+import subprocess
 
 from json_to_cafeinp import JsonToCafeinp
 from make_queues import MakeQueues
@@ -12,6 +13,7 @@ class SubmitQueue:
         self.injson=inpfile
         self.WORKDIR=""
         self.INPDIR=""
+        self.loadjson=json.load(open(self.injson))
 
     def main(self):
         inputs=JsonToCafeinp(self.injson)
@@ -25,14 +27,21 @@ class SubmitQueue:
         self.submitQueue()
 
     def _makeQueue(self):
-        loadjson=json.load(open(self.injson))
+
         queues=MakeQueues()
         queues.main(self.INPDIR,self.BASEDIR)
-        queues.setQueue(loadjson["queue"]["6"][-1])
-        queues.setCore(loadjson["queue"]["8"][-1])
+        queues.setQueue(self.loadjson["queue"]["6"][-1])
+        queues.setCore(self.loadjson["queue"]["8"][-1])
         
     def submitQueue(self):
-        pass
+        filename=self.loadjson["inputfile"]["filenames"]["filename"]["name"]
+        cmdline="ls %s/*%s*.sh" % (self.INPDIR,filename)
+        print cmdline
+        qsublist=subprocess.check_output(cmdline,shell=True).split()
+        
+        for iqsub in qsublist:
+            exe=["qsub",iqsub]
+            subprocess.Popen(exe)
 
 if __name__ == "__main__":
     test=SubmitQueue('./test/inp/inp.json')
