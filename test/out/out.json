@@ -5,12 +5,21 @@
         "2": "#$ -S /bin/sh", 
         "5": "#$ -o ", 
         "4": "#$ -N ", 
-        "7": "#$ -pe smp ", 
-        "6": "#$ -q ", 
+        "7": [
+            "#$ -pe smp ", 
+            3
+        ], 
+        "6": [
+            "#$ -q ", 
+            "q01-08.q"
+        ], 
         "9": "./cafemol ./inp/test.inp", 
-        "8": "OMP_NUM_THREADS ="
+        "8": [
+            "OMP_NUM_THREADS =", 
+            3
+        ]
     }, 
-    "BASEDIR": "", 
+    "BASEDIR": "/home/ono/misc/cluster_pscripts", 
     "inputfile": {
         "md_information": {
             "n_seed": "-1", 
@@ -72,7 +81,7 @@
                 "ionic_strength": "0.150", 
                 "cutoff": "12.0", 
                 "diele_water": "78.0", 
-                "i_diele": "78.0"
+                "i_diele": "0"
             }, 
             "aicg": {
                 "i_aicg": "1"

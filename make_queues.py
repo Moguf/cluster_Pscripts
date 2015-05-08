@@ -7,7 +7,7 @@ import argparse
 import subprocess
 
 
-class MakeQueue:
+class Queue:
     def __init__(self):
         self.core=1
         self.name="test"
@@ -30,14 +30,11 @@ class MakeQueue:
         otxt+="#$ -pe smp "+str(self.core)+"\n\n"
 
         otxt+="OMP_NUM_THREADS="+str(self.core)+"\n"
-        otxt+=self.exedir+"cafemol"+" "+self.inpdir+self.name+".inp"+"\n"
+        otxt+=self.exedir+"/cafemol"+" "+self.inpdir+self.name+".inp"+"\n"
 
         wfile.write(otxt)
         wfile.close()
 
-    def _checkDir(self):
-        pass
-        
 
 
 class MakeQueues:
@@ -48,7 +45,14 @@ class MakeQueues:
         self.queue="all.q"
 
 
-    def test(self):
+    def main(self,workdir,exedir):       ## from other scripts
+        self.exedir=exedir
+        self.setWORKDIR(workdir)
+        self.mkdirErrLog()
+        self.makeShfiles()
+
+
+    def test(self):       ## from commndline
         self._initArg()
         self.mkdirErrLog()
         self.makeShfiles()
@@ -57,19 +61,19 @@ class MakeQueues:
     def makeShfiles(self):
         cmdline="ls "+self.WORKDIR+"*.inp"
         inplist=subprocess.check_output([cmdline],shell=True).split()
-        queue=MakeQueue()
+        queue=Queue()
         queue.exedir=self.exedir
         queue.core=self.core
         queue.inpdir=self.WORKDIR
-
+        queue.queue=self.queue
         for iinp in inplist:
             inpname=iinp.split('/')[-1].split('.')[0]
             queue.name=inpname
             queue.write(self.WORKDIR+inpname+".sh")
     
 
-    def setQueue(self,num):
-        self.queue=str(num)
+    def setQueue(self,queuename):
+        self.queue=str(queuename)
 
 
     def setCore(self,num):
@@ -88,7 +92,11 @@ class MakeQueues:
             workdir=workdir+'/'
         if workdir[0]!='/':
             workdir='/'+workdir
-        
+        if os.path.exists(workdir):
+            self.WORKDIR=workdir
+            print "WORKDIR is set to "+self.WORKDIR
+            return True
+
         self.WORKDIR=os.path.dirname(os.path.abspath(__file__))+workdir
         print "WORKDIR is set to "+self.WORKDIR
 

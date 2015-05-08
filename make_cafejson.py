@@ -3,20 +3,21 @@
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.
 import json
+import argparse
+import os
 
 from cafemol_style import CafemolStyleInp
-
 
 class MakeCafeJson(CafemolStyleInp):
     def __init__(self):
         CafemolStyleInp.__init__(self)
-        self.job_name=""
-        self.job_core=1
-        self.job_quete=""
-        
+        self.job_core="1"
+        self.job_queue="all.q"
+        self.inpfile=""
 
-    def main(self,inpfile):
-        self.read(inpfile)
+    def main(self):
+        self._initArg()
+        self.read(self.inpfile)
         self.check()
         self.makeJson()
         
@@ -31,7 +32,7 @@ class MakeCafeJson(CafemolStyleInp):
                    }
 
         jsondict={
-            "BASEDIR":"",
+            "BASEDIR":os.path.abspath(os.path.dirname(__file__)) ,
             "inputfile":inputdict,
             "queue":self._makeQueue()
         }
@@ -178,16 +179,30 @@ class MakeCafeJson(CafemolStyleInp):
             "3":"#$ -V", 
             "4":"#$ -N ",
             "5":"#$ -o ",
-            "6":"#$ -q ",
-            "7":"#$ -pe smp ",
-            "8":"OMP_NUM_THREADS =",
-            "9":"./cafemol ./inp/test.inp"
+            "6":["#$ -q ",self.job_queue],
+            "7":["#$ -pe smp ",self.job_core],
+            "8":["OMP_NUM_THREADS =",self.job_core],
+            "9":"./cafemol ./inp/test.inp",
         }
         
         return _queuedic
         
+
+    def _initArg(self):
+        parser = argparse.ArgumentParser(description='This scripts make json-style of cafemol-inputs')
+        parser.add_argument('inputfile',nargs='?',help="input-file[.inp]")
+        parser.add_argument('-q','--queue',help="you can choice queue",default='all.q')
+        parser.add_argument('-c','--core',type=int,choices=range(1,21),help="How many core do you use?In rei up to12.In cyrus upt to 20",default='1')
+         
+        self.job_core=parser.parse_args().core
+        self.job_queue=parser.parse_args().queue
+        self.inpfile=parser.parse_args().inputfile
+
+        
 if __name__ == "__main__":
+    #### !!!TEST COMMAND HERE!!!
+    #### python make_cafejson.py ./test/inp/test.inp -c 3 -q node01-08.q
     test = MakeCafeJson()
-    test.main("./test/inp/test.inp")
+    test.main()
     
 

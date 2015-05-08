@@ -6,8 +6,8 @@
 #$ -N mvmmon400t400n10
 #$ -o /home/ono/misc/cluster_pscripts/test/inp/mvmmon400/log/mvmmon400t400n10.log
 #$ -e /home/ono/misc/cluster_pscripts/test/inp/mvmmon400/err/mvmmon400t400n10.err
-#$ -q 
-#$ -pe smp 
+#$ -q all.q
+#$ -pe smp 1
 
-OMP_NUM_THREADS=
-cafemol /home/ono/misc/cluster_pscripts/test/inp/mvmmon400/mvmmon400t400n10.inp
+OMP_NUM_THREADS=1
+/home/ono/misc/cluster_pscripts/test/cafemol /home/ono/misc/cluster_pscripts/test/inp/mvmmon400/mvmmon400t400n10.inp
