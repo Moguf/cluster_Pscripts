@@ -1,4 +1,4 @@
-#!/bin/usr/env python
+#!/usr/bin/env python2
 #coding:utf-8
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.
