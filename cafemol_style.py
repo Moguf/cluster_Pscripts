@@ -8,8 +8,6 @@ import myutil
 
 class CafemolStyleInp:
     def __init__(self):
-
-
         ##########Block names
         ##default_styles
         self.b_filenames = False
@@ -203,10 +201,24 @@ class CafemolStyleInp:
         otxt=""
         key=bkey[2:]
         ### bkey is 'b_aicg' , key is aicg
-        print self.__dict__[bkey]
+        ### aicg in inp.json
         if self.__dict__[bkey]:
-            print bkey
+            ### Caution!!! This part is not good!!!!!
+            ### I shuld make optional dictonary.
+            ### because of I don't have to use if-sentence.
+            ### I have only to use for-sentence.
             otxt+="<<<< "+key+"\n"
+            if bkey=="b_aicg":
+                otxt+=self._writeContents("i_aicg")
+            elif bkey=="b_electrostatic":
+                otxt+=self._writeContents("ionic_strength")
+                otxt+=self._writeContents("cutoff")
+                otxt+=self._writeContents("diele_water")
+                otxt+=self._writeContents("i_diele")
+            elif bkey=="b_flexible_local":
+                otxt+=self._writeContents("k_dih")
+                otxt+=self._writeContents("k_ang")
+
             otxt+=">>>>\n\n"
             return otxt
         else:
@@ -367,7 +379,6 @@ class CafemolStyleInp:
                 self.k_dih = ilist[-1]
             if re.search(r"^k_ang$",ilist[0]):
                 self.k_ang = ilist[-1]
-
 
     def show(self):
         for i in self.__dict__.keys():

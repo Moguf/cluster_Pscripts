@@ -40,3 +40,19 @@ i_com_zeroing = 1
 i_no_trans_rot = 0
 >>>>
 
+<<<< aicg
+i_aicg = 1
+>>>>
+
+<<<< flexible_local
+k_dih = 1.00
+k_ang = 1.00
+>>>>
+
+<<<< electrostatic
+ionic_strength = 0.150
+cutoff = 12.0
+diele_water = 78.0
+i_diele = 78.0
+>>>>
+

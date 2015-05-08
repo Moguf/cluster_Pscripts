@@ -148,37 +148,37 @@ class JsonToCafeinp:
 
     def _readOptionalBlock(self):
         #### aicg 
-        if self.b_aicg:
+        if self.cafestyle.b_aicg:
             self.cafestyle.i_aicg = self.jsondata["inputfile"]["optional_block"]["aicg"]["i_aicg"]
         #### electrostatic
-        if self.b_electrostatic:
+        if self.cafestyle.b_electrostatic:
             self.cafestyle.cutoff = self.jsondata["inputfile"]["optional_block"]["electrostatic"]["cutoff"]
             self.cafestyle.ionic_strength = self.jsondata["inputfile"]["optional_block"]["electrostatic"]["ionic_strength"]
             self.cafestyle.diele_water = self.jsondata["inputfile"]["optional_block"]["electrostatic"]["diele_water"]
             self.cafestyle.i_diele= self.jsondata["inputfile"]["optional_block"]["electrostatic"]["i_diele"]
         #### flexible_local
-        if self.b_flexible_local:
+        if self.cafestyle.b_flexible_local:
             self.cafestyle.k_dih = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_dih"]
             self.cafestyle.k_ang = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_ang"]
     def _checkBlock(self):
         print "check Block ...",
 
-        self.b_filenames = self.jsondata["inputfile"].has_key("filenames")
-        self.b_job_cntl = self.jsondata["inputfile"].has_key("job_cntl")
-        self.b_unit_and_state = self.jsondata["inputfile"].has_key("unit_and_state")
-        self.b_energy_function = self.jsondata["inputfile"].has_key("energy_function")
-        self.b_md_information = self.jsondata["inputfile"].has_key("md_information")
+        self.cafestyle.b_filenames = self.jsondata["inputfile"].has_key("filenames")
+        self.cafestyle.b_job_cntl = self.jsondata["inputfile"].has_key("job_cntl")
+        self.cafestyle.b_unit_and_state = self.jsondata["inputfile"].has_key("unit_and_state")
+        self.cafestyle.b_energy_function = self.jsondata["inputfile"].has_key("energy_function")
+        self.cafestyle.b_md_information = self.jsondata["inputfile"].has_key("md_information")
 
         ##optional flag
-        self.b_electrostatic = self.jsondata["inputfile"]["optional_block"].has_key("electrostatic")
-        self.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("flexible_local")
-        self.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("aicg")
+        self.cafestyle.b_electrostatic = self.jsondata["inputfile"]["optional_block"].has_key("electrostatic")
+        self.cafestyle.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("flexible_local")
+        self.cafestyle.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("aicg")
         
-        if not (self.b_filenames and \
-           self.b_job_cntl and \
-           self.b_unit_and_state and \
-           self.b_energy_function and \
-           self.b_md_information):
+        if not (self.cafestyle.b_filenames and \
+           self.cafestyle.b_job_cntl and \
+           self.cafestyle.b_unit_and_state and \
+           self.cafestyle.b_energy_function and \
+           self.cafestyle.b_md_information):
             raise Exception("Bock fields Error, Please check it.")
         
         print " OK!!!"
