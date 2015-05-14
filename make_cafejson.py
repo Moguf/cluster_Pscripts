@@ -143,6 +143,8 @@ class MakeCafeJson(CafemolStyleInp):
             _mdinformationdict['i_rand_type']=self.i_rand_type
         if self.i_com_zeroing_ini:
             _mdinformationdict['i_com_zeroing_ini']=self.i_com_zeroing_ini
+        if self.i_del_int:
+            _mdinformationdict['i_del_int']=self.i_del_int
         ####
         
         return _mdinformationdict

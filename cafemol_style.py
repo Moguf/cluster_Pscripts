@@ -188,6 +188,7 @@ class CafemolStyleInp:
         otxt+=self._writeContents("i_com_zeroing_ini")
         otxt+=self._writeContents("i_com_zeroing")
         otxt+=self._writeContents("i_no_trans_rot")
+        otxt+=self._writeContents("i_del_int")
         otxt+=">>>>\n\n"
         
         ## optional_block
@@ -366,6 +367,8 @@ class CafemolStyleInp:
                 self.i_com_zeroing = ilist[-1]
             if re.search(r"^i_no_trans_rot$",ilist[0]):
                 self.i_no_trans_rot = ilist[-1]
+            if re.search(r"^i_del_int$",ilist[0]):
+                self.i_del_int = ilist[-1]
 
             ##### optional blocks
             ###### aicg
