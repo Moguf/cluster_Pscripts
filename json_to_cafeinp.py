@@ -37,10 +37,12 @@ class JsonToCafeinp:
         self._readMdInformation()
         self._readOptionalBlock()
 
-        self.cafestyle.path = self.OUTDIR
+
+        
 
     def makeInps(self):
         self._mkdirOutInp()
+        self.cafestyle.path = self.OUTDIR
         self._makeInputs()
         
 
@@ -50,6 +52,7 @@ class JsonToCafeinp:
         self.cafestyle.path_pdb = self.jsondata["inputfile"]["filenames"]["path_pdb"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
         self.cafestyle.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
+
         
         ### optional parts
         if self.jsondata["inputfile"]["filenames"].has_key("path_aicg"):
@@ -222,7 +225,10 @@ class JsonToCafeinp:
         for ilist in itertools.product(*looplist):
             outclass=copy.deepcopy(self.cafestyle)
             for i,key in enumerate(loopkeys):
-                outclass.__dict__[key]=str(int(ilist[i]))
+                if key=="tempk":
+                    outclass.__dict__[key]=str(float(ilist[i]))
+                else:    
+                    outclass.__dict__[key]=str(int(ilist[i]))
                 outclass.filename["index"]+=key[0]+str(ilist[i])
             outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
             outclass.write(self.INPDIR+"/"+outclass.filename+".inp")

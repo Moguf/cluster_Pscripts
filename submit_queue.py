@@ -42,8 +42,7 @@ class SubmitQueue:
         
         for iqsub in qsublist:
             exe=["qsub",iqsub]
-            print " ".join(exe)
-            #subprocess.Popen(exe)
+            subprocess.Popen(exe)
 
 if __name__ == "__main__":
     test=SubmitQueue(sys.argv[1])
