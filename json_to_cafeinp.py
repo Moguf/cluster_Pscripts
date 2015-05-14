@@ -179,6 +179,7 @@ class JsonToCafeinp:
         self.cafestyle.b_electrostatic = self.jsondata["inputfile"]["optional_block"].has_key("electrostatic")
         self.cafestyle.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("flexible_local")
         self.cafestyle.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("aicg")
+        self.cafestyle.b_del_interaction = self.jsondata["inputfile"]["optional_block"].has_key("del_interaction")
         
         if not (self.cafestyle.b_filenames and \
            self.cafestyle.b_job_cntl and \
