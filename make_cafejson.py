@@ -34,7 +34,7 @@ class MakeCafeJson(CafemolStyleInp):
                    }
 
         jsondict={
-            "BASEDIR":os.path.abspath(os.path.dirname(__file__)) ,
+            "BASEDIR":".",
             "inputfile":inputdict,
             "queue":self._makeQueue()
         }
