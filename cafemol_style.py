@@ -20,6 +20,7 @@ class CafemolStyleInp:
         self.b_electrostatic = False
         self.b_flexible_local = False
         self.b_aicg = False
+        self.b_del_interaction = False
 
         ##########Content names
         ##filenames contents
@@ -97,8 +98,8 @@ class CafemolStyleInp:
         #### flexible_local
         self.k_dih = False
         self.k_ang = False
-
-        
+        #### DEL_GO
+        self.DEL_GO = []
         
     def test(self):
         self.read("./test/inp/test.inp")
@@ -193,6 +194,7 @@ class CafemolStyleInp:
         otxt+=self._writeOptionalBlock("b_aicg")
         otxt+=self._writeOptionalBlock("b_flexible_local")
         otxt+=self._writeOptionalBlock("b_electrostatic")
+        otxt+=self._writeOptionalBlock("b_del_interaction")
 
         ofile.write(otxt)
         ofile.close()
@@ -219,7 +221,8 @@ class CafemolStyleInp:
             elif bkey=="b_flexible_local":
                 otxt+=self._writeContents("k_dih")
                 otxt+=self._writeContents("k_ang")
-
+            elif bkey=="b_del_interaction":
+                otxt+=self._writeContents("DEL_GO")
             otxt+=">>>>\n\n"
             return otxt
         else:
@@ -227,7 +230,7 @@ class CafemolStyleInp:
     
         
     def _writeContents(self,key):
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO"]
         if self.__dict__[key]:
             if not key in ignorelist:
                 return key+" = "+self.__dict__[key]+"\n"
@@ -272,6 +275,8 @@ class CafemolStyleInp:
                 self.b_flexible_local = iline.endswith('flexible_local')
             if iline.endswith('aicg'):
                 self.b_aicg = iline.endswith('aicg')
+            if iline.endswith('del_interaction'):
+                self.b_del_interaction = iline.endswith('del_interaction')
 
             
     def _readContents(self):
@@ -380,6 +385,8 @@ class CafemolStyleInp:
                 self.k_dih = ilist[-1]
             if re.search(r"^k_ang$",ilist[0]):
                 self.k_ang = ilist[-1]
+            if re.search(r"^DEL_GO",ilist[0]):
+                self.DEL_GO.append(ilist[0])
 
     def show(self):
         for i in self.__dict__.keys():

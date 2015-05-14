@@ -5,18 +5,21 @@
 import json
 import subprocess
 import sys
+import argparse
 
 from json_to_cafeinp import JsonToCafeinp
 from make_queues import MakeQueues
 
 class SubmitQueue:
-    def __init__(self,inpfile):
-        self.injson=inpfile
+    def __init__(self):
+        self.injson=""
         self.WORKDIR=""
         self.INPDIR=""
-        self.loadjson=json.load(open(self.injson))
+        self.loadjson=""
 
     def main(self):
+        self._initArg()
+        self.loadjson=json.load(open(self.injson))
         inputs=JsonToCafeinp(self.injson)
         inputs.read()
         inputs.makeInps()
@@ -45,7 +48,13 @@ class SubmitQueue:
             print " ".join(exe)
             #subprocess.Popen(exe)
 
+    def _initArg(self):
+        parser=argparse.ArgumentParser(description='This script submits torque-queue from cafe-json')
+        parser.add_argument('inputfile',nargs='?',help="input-file[.json]")
+        self.injson=parser.parse_args().inputfile
+
+
 if __name__ == "__main__":
-    test=SubmitQueue(sys.argv[1])
+    test=SubmitQueue()
     test.main()
     

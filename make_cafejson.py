@@ -21,10 +21,10 @@ class MakeCafeJson(CafemolStyleInp):
         self._initArg()
         self.read(self.inpfile)
         self.check()
-        self.makeJson()
-        
+        self.makeJson(self.outfile)
 
-    def makeJson(self,outjson="./out.json"):
+    def makeJson(self,outjson):
+        
         inputdict={"filenames":self._makeFilnames(),
                    "job_cntl":self._makeJobcntl(),
                    "unit_and_state":self._makeUnitandstate(),
@@ -170,6 +170,11 @@ class MakeCafeJson(CafemolStyleInp):
                 "k_ang":self.k_ang,
             }
             
+        if self.b_del_interaction:
+            _optblockdict["del_interaction"]={
+                "DEL_GO":self.DEL_GO
+            }
+
 
         return _optblockdict
 
@@ -191,15 +196,17 @@ class MakeCafeJson(CafemolStyleInp):
         
 
     def _initArg(self):
-        parser = argparse.ArgumentParser(description='This scripts make json-style of cafemol-inputs')
+        parser = argparse.ArgumentParser(description='This script make json-style of cafemol-inputs')
         parser.add_argument('inputfile',nargs='?',help="input-file[.inp]")
+        parser.add_argument('-o','--output',nargs='?',help="output-file[.json]",default='out.json')
         parser.add_argument('-q','--queue',help="you can choice queue",default='all.q')
         parser.add_argument('-c','--core',type=int,choices=range(1,21),help="How many core do you use?In rei up to12.In cyrus upt to 20",default='1')
-         
+        
+
         self.job_core=parser.parse_args().core
         self.job_queue=parser.parse_args().queue
         self.inpfile=parser.parse_args().inputfile
-
+        self.outfile=parser.parse_args().output
         
 if __name__ == "__main__":
     #### !!!TEST COMMAND HERE!!!

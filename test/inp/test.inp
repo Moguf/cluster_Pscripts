@@ -56,6 +56,7 @@ i_com_zeroing = 1
 i_no_trans_rot = 0
 tempk = 400.0
 n_seed = -1
+i_del_int =1
 >>>>
 
 <<<< electrostatic
@@ -71,3 +72,6 @@ k_dih = 1.00
 k_ang = 1.00
 >>>>
 
+<<<< del_interaction
+DEL_GO(1-38/ALL)
+>>>>

@@ -1,6 +1,5 @@
 <<<< filenames
-filename = mvmmon400
-path = ~/mvmtrunk/data
+filename = m1z14t340n6
 OUTPUT pdb crd dcd psf rst
 path_pdb = ~/mvmtrunk/pdb
 path_ini = ~/mvmtrunk/pdb
@@ -34,8 +33,8 @@ n_tstep(1) = 100000000
 tstep_size = 0.1
 n_step_save = 1000
 n_step_neighbor = 100
-tempk = 400.0
-n_seed = -1
+tempk = 340
+n_seed = 6
 i_com_zeroing = 1
 i_no_trans_rot = 0
 >>>>
@@ -54,9 +53,5 @@ ionic_strength = 0.150
 cutoff = 12.0
 diele_water = 78.0
 i_diele = 0
->>>>
-
-<<<< del_interaction
-DEL_GO(1-38/ALL)
 >>>>
 

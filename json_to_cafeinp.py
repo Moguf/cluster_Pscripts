@@ -2,10 +2,12 @@
 #coding:utf-8
 #editor:ono
 #This script makes input files from cafe_json
+
 import json
 import os
 import itertools
 import copy
+import sys
 
 from cafemol_style import CafemolStyleInp
 
@@ -160,6 +162,10 @@ class JsonToCafeinp:
         if self.cafestyle.b_flexible_local:
             self.cafestyle.k_dih = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_dih"]
             self.cafestyle.k_ang = self.jsondata["inputfile"]["optional_block"]["flexible_local"]["k_ang"]
+        #### del_interaction
+        if self.cafestyle.b_del_interaction:
+            print 'del_interaction'
+            self.cafestyle.DEL_GO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_GO"]
     def _checkBlock(self):
         print "check Block ...",
 
@@ -210,8 +216,8 @@ class JsonToCafeinp:
     def _makeInputs(self):
         looplist=[]
         loopkeys=[]
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb"]
-
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO"]
+        
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):
                 if not ikey in ignorelist:
@@ -219,14 +225,14 @@ class JsonToCafeinp:
                     looplist.append(tmplist)
                     loopkeys.append(ikey)
 
-        for ilist in itertools.product(*looplist):
+        for index,ilist in enumerate(itertools.product(*looplist)):
             outclass=copy.deepcopy(self.cafestyle)
             for i,key in enumerate(loopkeys):
                 outclass.__dict__[key]=str(int(ilist[i]))
                 outclass.filename["index"]+=key[0]+str(ilist[i])
             outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
             outclass.write(self.INPDIR+"/"+outclass.filename+".inp")
-
+            print index+1,":make "+self.INPDIR+"/"+outclass.filename+".inp"
 
     def _listsubsitution(self,inlist):
         if len(inlist)==1:
@@ -237,7 +243,7 @@ class JsonToCafeinp:
             return inlist
 
 if __name__ == "__main__":
-    test=JsonToCafeinp('./test/inp/inp.json')
+    test=JsonToCafeinp(sys.argv[1])
     test.main()
 
                                                                                             
