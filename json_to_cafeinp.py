@@ -39,10 +39,11 @@ class JsonToCafeinp:
         self._readMdInformation()
         self._readOptionalBlock()
 
-        self.cafestyle.path = self.OUTDIR
+
 
     def makeInps(self):
         self._mkdirOutInp()
+        self.cafestyle.path = self.OUTDIR
         self._makeInputs()
         
 
@@ -234,6 +235,7 @@ class JsonToCafeinp:
                 outclass.__dict__[key]=str(int(ilist[i]))
                 outclass.filename["index"]+=key[0]+str(ilist[i])
             outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
+
             outclass.write(self.INPDIR+"/"+outclass.filename+".inp")
             print index+1,":make "+self.INPDIR+"/"+outclass.filename+".inp"
 

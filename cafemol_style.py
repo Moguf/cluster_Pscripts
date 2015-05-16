@@ -138,6 +138,7 @@ class CafemolStyleInp:
         otxt+="<<<< filenames\n"
         otxt+=self._writeContents("filename")
         otxt+=self._writeContents("path")
+        print self._writeContents("path")
         otxt+=self._writeContents("OUTPUT")
         otxt+=self._writeContents("path_pdb")
         otxt+=self._writeContents("path_ini")
@@ -212,7 +213,6 @@ class CafemolStyleInp:
             ### because of I don't have to use if-sentence.
             ### I have only to use for-sentence.
             otxt+="<<<< "+key+"\n"
-
             if bkey=="b_aicg":
                 otxt+=self._writeContents("i_aicg")
             elif bkey=="b_electrostatic":
