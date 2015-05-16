@@ -138,7 +138,6 @@ class CafemolStyleInp:
         otxt+="<<<< filenames\n"
         otxt+=self._writeContents("filename")
         otxt+=self._writeContents("path")
-        print self._writeContents("path")
         otxt+=self._writeContents("OUTPUT")
         otxt+=self._writeContents("path_pdb")
         otxt+=self._writeContents("path_ini")
