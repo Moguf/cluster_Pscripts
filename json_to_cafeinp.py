@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/home/ono/Python-2.7.9/python
 #coding:utf-8
 #editor:ono
 #This script makes input files from cafe_json
@@ -50,6 +50,7 @@ class JsonToCafeinp:
         self.cafestyle.filename=self.jsondata["inputfile"]["filenames"]["filename"]
         self.cafestyle.OUTPUT = self.jsondata["inputfile"]["filenames"]["OUTPUT"]
         self.cafestyle.path_pdb = self.jsondata["inputfile"]["filenames"]["path_pdb"]
+        self.cafestyle.path = self.jsondata["inputfile"]["filenames"]["path"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
         self.cafestyle.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
         

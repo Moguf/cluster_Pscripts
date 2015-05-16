@@ -1,7 +1,8 @@
-#!/usr/bin/env python2.7
+#!/home/ono/Python-2.7.9/python
 #coding:utf-8
 #editor:ono
 #This script makes input files and submits queue.
+
 import json
 import subprocess
 import sys
@@ -25,17 +26,15 @@ class SubmitQueue:
         inputs.makeInps()
         self.BASEDIR=inputs.BASEDIR
         self.INPDIR=inputs.INPDIR
-        
-        self._makeQueue()
 
+        self._makeQueue()
         self.submitQueue()
 
     def _makeQueue(self):
-
         queues=MakeQueues()
-        queues.main(self.INPDIR,self.BASEDIR)
         queues.setQueue(self.loadjson["queue"]["6"][-1])
         queues.setCore(self.loadjson["queue"]["8"][-1])
+        queues.main(self.INPDIR,self.BASEDIR)
         
     def submitQueue(self):
         filename=self.loadjson["inputfile"]["filenames"]["filename"]["name"]
