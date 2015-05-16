@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/home/ono/Python-2.7.9/python
 #coding:utf-8
 #editor:ono
 #This script makes input files from cafe_json
@@ -52,6 +52,7 @@ class JsonToCafeinp:
         self.cafestyle.filename=self.jsondata["inputfile"]["filenames"]["filename"]
         self.cafestyle.OUTPUT = self.jsondata["inputfile"]["filenames"]["OUTPUT"]
         self.cafestyle.path_pdb = self.jsondata["inputfile"]["filenames"]["path_pdb"]
+        self.cafestyle.path = self.jsondata["inputfile"]["filenames"]["path"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
         self.cafestyle.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
 
@@ -169,6 +170,7 @@ class JsonToCafeinp:
         if self.cafestyle.b_del_interaction:
             print 'del_interaction'
             self.cafestyle.DEL_GO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_GO"]
+            self.cafestyle.DEL_LGO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_LGO"]
     def _checkBlock(self):
         print "check Block ...",
 
@@ -220,7 +222,7 @@ class JsonToCafeinp:
     def _makeInputs(self):
         looplist=[]
         loopkeys=[]
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO"]
         
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):

@@ -1,4 +1,5 @@
-#!/rei_fs1/ono/python/bin/python
+#!/home/ono/Python-2.7.9/python
+####!/rei_fs1/ono/python/bin/python
 #coding:utf-8
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.
@@ -174,7 +175,8 @@ class MakeCafeJson(CafemolStyleInp):
             
         if self.b_del_interaction:
             _optblockdict["del_interaction"]={
-                "DEL_GO":self.DEL_GO
+                "DEL_GO":self.DEL_GO,
+                "DEL_LGO":self.DEL_LGO
             }
 
 
