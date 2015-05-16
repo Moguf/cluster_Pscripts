@@ -166,6 +166,7 @@ class JsonToCafeinp:
         if self.cafestyle.b_del_interaction:
             print 'del_interaction'
             self.cafestyle.DEL_GO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_GO"]
+            self.cafestyle.DEL_LGO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_LGO"]
     def _checkBlock(self):
         print "check Block ...",
 
@@ -217,7 +218,7 @@ class JsonToCafeinp:
     def _makeInputs(self):
         looplist=[]
         loopkeys=[]
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO"]
         
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):

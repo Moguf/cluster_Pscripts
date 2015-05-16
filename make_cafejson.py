@@ -174,7 +174,8 @@ class MakeCafeJson(CafemolStyleInp):
             
         if self.b_del_interaction:
             _optblockdict["del_interaction"]={
-                "DEL_GO":self.DEL_GO
+                "DEL_GO":self.DEL_GO,
+                "DEL_LGO":self.DEL_LGO
             }
 
 

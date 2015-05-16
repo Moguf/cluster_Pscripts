@@ -100,6 +100,7 @@ class CafemolStyleInp:
         self.k_ang = False
         #### DEL_GO
         self.DEL_GO = []
+        self.DEL_LGO = []
         
     def test(self):
         self.read("./test/inp/test.inp")
@@ -224,6 +225,7 @@ class CafemolStyleInp:
                 otxt+=self._writeContents("k_ang")
             elif bkey=="b_del_interaction":
                 otxt+=self._writeContents("DEL_GO")
+                otxt+=self._writeContents("DEL_LGO")
             otxt+=">>>>\n\n"
             return otxt
         else:
@@ -231,12 +233,15 @@ class CafemolStyleInp:
     
         
     def _writeContents(self,key):
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO"]
         if self.__dict__[key]:
             if not key in ignorelist:
                 return key+" = "+self.__dict__[key]+"\n"
             else:
-                return " ".join(self.__dict__[key])+"\n"
+                if key in ["DEL_GO","DEL_LGO"]:
+                    return "\n".join(self.__dict__[key])+"\n"
+                else:
+                    return " ".join(self.__dict__[key])+"\n"
         else:
             return ""
         
@@ -388,8 +393,11 @@ class CafemolStyleInp:
                 self.k_dih = ilist[-1]
             if re.search(r"^k_ang$",ilist[0]):
                 self.k_ang = ilist[-1]
+            ###### del_interaction
             if re.search(r"^DEL_GO",ilist[0]):
                 self.DEL_GO.append(ilist[0])
+            if re.search(r"^DEL_LGO",ilist[0]):
+                self.DEL_LGO.append(ilist[0])
 
     def show(self):
         for i in self.__dict__.keys():
