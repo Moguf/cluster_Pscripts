@@ -1,15 +1,17 @@
 #!/usr/bin/env python2.7
 import re
+import argparse
 
 class ReadNinfo:
     def __init__(self):
         self.data={}
         for ikey in ["bond","angl","aicg13","aicgdih","dihd","contact"]:
             self.data[ikey]=[]
+        self.filename=""
 
-
-    def main(self,filename):
-        self.read(filename)
+    def main(self):
+        self._initArg()
+        self.read(self.filename)
         
 
     def read(self,filename):
@@ -36,15 +38,21 @@ class ReadNinfo:
         
         wfile.write(ostr)
 
-
     def _num(self,s):
         try:
             return int(s)
         except ValueError:
             return float(s)
 
+    def _initArg(self):
+        parser = argparse.ArgumentParser(description='This script make json-style of cafemol-ninfo')
+        parser.add_argument('inputfile',nargs='?',help="input-file[.ninfo]")
+        parser.add_argument('-o','--output',nargs='?',help="output-file[.ninfo]",default='out.ninfo')
+        self.filename=parse.parse_args().inputfile
+        
+
+        
             
 if __name__=="__main__":
     test=ReadNinfo()
-    test.main('./test/inp/test.ninfo')
-    test.write('./test/out/out.ninfo')
+    test.main()
