@@ -138,7 +138,6 @@ class CafemolStyleInp:
         otxt+="<<<< filenames\n"
         otxt+=self._writeContents("filename")
         otxt+=self._writeContents("path")
-        print self._writeContents("path")
         otxt+=self._writeContents("OUTPUT")
         otxt+=self._writeContents("path_pdb")
         otxt+=self._writeContents("path_ini")
@@ -236,6 +235,8 @@ class CafemolStyleInp:
         ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO"]
         if self.__dict__[key]:
             if not key in ignorelist:
+                if key == "tempk":
+                    return key+" = "+self.__dict__[key]+".0\n"
                 return key+" = "+self.__dict__[key]+"\n"
             else:
                 if key in ["DEL_GO","DEL_LGO"]:
