@@ -1,24 +1,33 @@
 #!/bin/usr/env python
 # coding: utf-8
 # editor: ono
-
-import prody
 import argparse
+
+import numpy
+
+import dcdfile
 
 
 class CalcRMSF:
     def __init__(self):
         self.dcdfile=""
-
+        self.all_cordinates=[]
 
     def main(self):
         self._initArg()
         self.read(self.dcdfile)
 
 
+    def test(self):
+        self.read("./test/inp/2gxa.dcd")
+
+
     def read(self,inputfile):
-        self.dcddata=prody.DCDFile('./test/inp/2gxa.dcd',mode='rb')
-        
+        self.dcd=dcdfile.DcdFile()
+        self.dcd.read(inputfile)
+
+    def readAll(self):
+        self.all_cordinates=[]
 
     def _initArg(self):
         parser = argparse.ArgumentParser(description='This scripts calculate RMSF from dcd-file.')
@@ -27,12 +36,8 @@ class CalcRMSF:
         self.dcdfile=parser.parse_args().inputfile
 
         
-    def test(self):
-        self.read("./test/inp/2gxa.dcd")
-
-
 if __name__=="__main__":
     test=CalcRMSF()
-    #test.test()
-    test.main()
+    test.test()
+    #test.main()
 
