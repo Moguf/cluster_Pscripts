@@ -53,17 +53,16 @@ class DcdFile(object):
 
     def __getitem__(self,item):
         tmp_cordinates=[]
-
-        try:
-            if isinstance(item,slice):
-                indices=item.indices(self.nframes)
-                
-                for i in range(*indices):
-                    self.dcdfile.seek(self.dcdheader.blocksize+i*12*(self.dcdheader.natoms+2))
-                    tmp_cordinates.append(self.readOneStep())
-
-                self.dcdfile.seek(0)
-                return tmp_cordinates
+        
+        if isinstance(item,slice):
+            indices=item.indices(self.nframes)
+            for i in range(*indices):
+                self.dcdfile.seek(self.dcdheader.blocksize+i*12*(self.dcdheader.natoms+2))
+                tmp_cordinates.append(self.readOneStep())
+                    
+            self.dcdfile.seek(0)
+            return tmp_cordinates
+        elif isinstance(item,int):
             if item>=0:
                 self.dcdfile.seek(self.dcdheader.blocksize+item*12*(self.dcdheader.natoms+2))
                 tmp_cordinates= self.readOneStep()        
@@ -73,7 +72,7 @@ class DcdFile(object):
                 self.dcdfile.seek(self.dcdheader.blocksize+item*12*(self.dcdheader.natoms+2))
                 tmp_cordinates= self.readOneStep()        
                 self.dcdfile.seek(0)
-        except:
+        else:
             errormsg="There is no %dth frame"%(item)
             raise MyError(errormsg)
             
@@ -190,13 +189,13 @@ class DcdFile(object):
         
         if total_steps==self.nframes:
             self.outstr+= "data: %d steps in this file\n" %total_steps
-            self.nframes=total_steps
             return True            
         else:
             print "-"*20,"CAUTION:!!!","-"*20
             print "\t\tIN header:total steps",self.nframes
             print "\t\tThis file size:total steps",total_steps
             print "-"*53
+            self.nframes=total_steps
             return False            
 
             
