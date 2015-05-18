@@ -19,12 +19,14 @@ class CalcRMSF:
 
 
     def test(self):
-        self.read("./test/inp/2gxa.dcd")
-
+        self.read("./test/inp/test.dcd")
+        
 
     def read(self,inputfile):
         self.dcd=dcdfile.DcdFile()
         self.dcd.read(inputfile)
+        print self.dcd[1]
+
 
     def readAll(self):
         self.all_cordinates=[]

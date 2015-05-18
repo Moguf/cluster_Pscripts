@@ -22,8 +22,8 @@ class DcdHeader:
         self.title = None
         self.tempk = None
         self.lunit2mp = []
-        self.nmp_real = None
-
+        self.natoms = None
+        self.blocksize=0
 
     def show(self):
         for ikey in self.__dict__.keys():
@@ -31,38 +31,69 @@ class DcdHeader:
 
 
 
-class DcdFile:
+class DcdFile(object):
     def __init__(self):
         self.dcdfile=False
-        self.blocksize=[]
         self.dcdheader=DcdHeader()
+        self.nframes=0  
+        self.iterValue=0
+
+
+    def __getitem__(self,item):
+        ### don't soppor slice format.
+        tmp_cordinates=[]
+        if isinstance(item,slice):
+            indices=item.indices(self.nframes)
+            print indices
+        try:
+            self.dcdfile.seek(self.dcdheader.blocksize+frameindex*12*(self.dcdheader.natoms+2))
+            tmp_cordinates= self.readOneStep()        
+            self.dcdfile.seek(0)
+        except:
+            errormsg="There is no %dth frame"%(frameindex)
+            raise MyError(errormsg)
+        return tmp_cordinates
+
+
+
+    def __iter__(self):
+        self.dcdfile.seek(self.dcdheader.blocksize)
+        return self
+        
+
+    def __len__(self):
+        return self.nframes
+
+
+    def next(self):
+        self.iterValue+=1
+        if self.nframes < self.iterValue:
+            raise StopIteration
+        return self.readOneStep()
 
 
     def main(self):
         self._initArg()
-        self.read(self.dcdfile)
+        self.read(self.inputfile)
 
-
-    def test(self):
-        self.read("./test/inp/2gxa.dcd")
-        print self.readOneStep()
-    
-
-    def read(self,infile):
-        self.dcdfile=open(infile,"rb")
+        
+    def read(self,inputfile):
+        print "read:",inputfile
+        self.inputfile=inputfile
+        self.dcdfile=open(self.inputfile,"rb")
         self._readHeader()
 
 
     def readOneStep(self):
         coord_matrix = []
         b = self._pickData()
-        x = struct.unpack('f' * self.dcdheader.nmp_real, b)
+        x = struct.unpack('f' * self.dcdheader.natoms, b)
         b = self._pickData()
-        y = struct.unpack('f' * self.dcdheader.nmp_real, b)
+        y = struct.unpack('f' * self.dcdheader.natoms, b)
         b = self._pickData()
-        z = struct.unpack('f' * self.dcdheader.nmp_real, b)
+        z = struct.unpack('f' * self.dcdheader.natoms, b)
         
-        for i in xrange(self.dcdheader.nmp_real) :
+        for i in xrange(self.dcdheader.natoms) :
             xyz = [x[i], y[i], z[i]]
             coord_matrix.append(xyz)
         return coord_matrix
@@ -86,7 +117,9 @@ class DcdFile:
         self.dcdheader.nstep = header[4]
         self.dcdheader.nunit_real = header[5]
         self.dcdheader.delta = header[10]
-
+        
+        self.nframes=self.dcdheader.nstep/self.dcdheader.nstep_save+1
+        ## initial struture and step = 1 sturecture are contained in dcd-file.
         ### read title block
         b=self._pickData()
         titleblock=struct.unpack('i'+'80s'*(3+self.dcdheader.nunit_real),b)
@@ -95,12 +128,43 @@ class DcdFile:
 
         for i in xrange(self.dcdheader.nunit_real) :
             self.dcdheader.lunit2mp.append(int(titleblock[i + 4]))
-
         ### 
         b = self._pickData()
-        self.dcdheader.nmp_real = struct.unpack('i', b)[0]
+        self.dcdheader.natoms = struct.unpack('i', b)[0]
 
-    
+
+        self.dcdfile.seek(0)
+        for i in range(3):
+            size1= struct.unpack("i",self.dcdfile.read(4))[0]
+            self.dcdfile.seek(size1,os.SEEK_CUR)
+            struct.unpack("i",self.dcdfile.read(4))[0]
+        
+        self.dcdheader.blocksize=self.dcdfile.tell()
+
+        self.dcdfile.seek(self.dcdheader.blocksize)
+
+        self._checkData()
+
+
+
+
+    def _checkData(self):
+        file_size=os.stat(self.inputfile).st_size
+        header_size=self.dcdheader.blocksize
+        coordinate_size=12*(self.dcdheader.natoms+2)
+        total_steps=(file_size-header_size)/coordinate_size
+        if total_steps==self.nframes:
+            print total_steps,"steps in this file"
+        else:
+
+            print "-"*20,"CAUTION:!!!","-"*20
+            print "\t\tIN header:total steps",self.nframes
+            print "\t\tThis file size:total steps",total_steps
+            print "-"*53
+        self.nframes=total_steps
+        return True
+
+            
     def _pickData(self):
         num = struct.unpack('i', self.dcdfile.read(4))[0]
         b=self.dcdfile.read(num)
@@ -113,10 +177,30 @@ class DcdFile:
         parser.add_argument('inputfile',nargs='?',help="input-file[.dcd]")
         parser.add_argument('-o','--output',nargs='?',help="output-file[.json]",default='out.json')
 
-        self.dcdfile=parser.parse_args().inputfile
+        self.inputfile=parser.parse_args().inputfile
 
 
+    def test(self):
+        self.read("./test/inp/2gxa.dcd")
+        ### broken file(2gxa.dcd)
+        #self.read("./test/inp/test.dcd")
 
+        print "10000 frames"
+        print "587 atoms"
+        """
+        initdata=self.readOneStep()
+        initdata=self.readOneStep()
+
+        print initdata
+        """
+        print len(self)
+
+        print self[-1]
+        """
+        for i,frame in enumerate(self):
+            print i,len(frame)
+        """
+        
 if __name__=="__main__":
     test=DcdFile()
     test.test()
