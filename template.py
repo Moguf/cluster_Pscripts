@@ -10,15 +10,31 @@ import argparse
 # My libraries
 
 
+
+
+class MyTemplateClass2:
+    def __init__(self):
+        self.inputfile=""
+
+
+
 class MyTemplateClass:
     def __init__(self):
         self.inputfile=""
 
 
+    def __iter__(self):
+        pass
+
+
+    def __getitem__(self,index):
+        pass
+
+
     def main(self):
         self._initArg()
         self.func1(self.inputfile)
-        
+
 
     def func1(self,inputfile):
         self._funcInFunc1()

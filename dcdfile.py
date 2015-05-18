@@ -30,6 +30,12 @@ class DcdHeader:
         for ikey in self.__dict__.keys():
             print ikey,self.__dict__[ikey]
 
+    def __str__(self):
+        outstr=""
+        for ikey in self.__dict__.keys():
+            outstr+="%s:%s\n" %(ikey,str(self.__dict__[ikey]))
+        return outstr
+
 
 
 class DcdFile(object):
@@ -38,7 +44,12 @@ class DcdFile(object):
         self.dcdheader=DcdHeader()
         self.nframes=0  
         self.iterValue=0
+        self.outstr=""
 
+    
+    def __str__(self):
+        return self.outstr
+        
 
     def __getitem__(self,item):
         tmp_cordinates=[]
@@ -91,10 +102,14 @@ class DcdFile(object):
 
         
     def read(self,inputfile):
-        print "read:",inputfile
+        self.outstr+="read: %s\n" %(inputfile)
         self.inputfile=inputfile
         self.dcdfile=open(self.inputfile,"rb")
         self._readHeader()
+
+
+    def close(self):
+        self.dcdfile.close()
 
 
     def readOneStep(self):
@@ -148,6 +163,9 @@ class DcdFile(object):
 
         b = self._pickData()
         self.dcdheader.natoms = struct.unpack('i', b)[0]
+
+        self.outstr+="data: %6.3lfK\n" % self.dcdheader.tempk
+        self.outstr+="data: %d Atoms\n" % self.dcdheader.natoms
         ###         
 
         ### read header block_size
@@ -171,16 +189,15 @@ class DcdFile(object):
         total_steps=(file_size-header_size)/coordinate_size
         
         if total_steps==self.nframes:
-            print total_steps,"steps in this file"
+            self.outstr+= "data: %d steps in this file\n" %total_steps
+            self.nframes=total_steps
+            return True            
         else:
             print "-"*20,"CAUTION:!!!","-"*20
             print "\t\tIN header:total steps",self.nframes
             print "\t\tThis file size:total steps",total_steps
             print "-"*53
-            
-        self.nframes=total_steps
-        
-        return True
+            return False            
 
             
     def _pickData(self):
