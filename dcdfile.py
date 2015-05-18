@@ -7,9 +7,8 @@ import sys
 import struct
 import argparse
 
-import numpy as np
-
 from my_error import MyError
+
 
 
 class DcdHeader:
@@ -26,6 +25,7 @@ class DcdHeader:
         self.natoms = None
         self.blocksize=0
 
+
     def show(self):
         for ikey in self.__dict__.keys():
             print ikey,self.__dict__[ikey]
@@ -41,15 +41,16 @@ class DcdFile(object):
 
 
     def __getitem__(self,item):
-        ### don't soppor slice format.
         tmp_cordinates=[]
 
         try:
             if isinstance(item,slice):
                 indices=item.indices(self.nframes)
+                
                 for i in range(*indices):
                     self.dcdfile.seek(self.dcdheader.blocksize+i*12*(self.dcdheader.natoms+2))
                     tmp_cordinates.append(self.readOneStep())
+
                 self.dcdfile.seek(0)
                 return tmp_cordinates
             if item>=0:
@@ -64,8 +65,8 @@ class DcdFile(object):
         except:
             errormsg="There is no %dth frame"%(item)
             raise MyError(errormsg)
+            
         return tmp_cordinates
-
 
 
     def __iter__(self):
@@ -98,6 +99,7 @@ class DcdFile(object):
 
     def readOneStep(self):
         coord_matrix = []
+        
         b = self._pickData()
         x = struct.unpack('f' * self.dcdheader.natoms, b)
         b = self._pickData()
@@ -108,6 +110,7 @@ class DcdFile(object):
         for i in xrange(self.dcdheader.natoms) :
             xyz = [x[i], y[i], z[i]]
             coord_matrix.append(xyz)
+            
         return coord_matrix
 
 
@@ -132,6 +135,8 @@ class DcdFile(object):
         
         self.nframes=self.dcdheader.nstep/self.dcdheader.nstep_save+1
         ## initial struture and step = 1 sturecture are contained in dcd-file.
+        ###
+
         ### read title block
         b=self._pickData()
         titleblock=struct.unpack('i'+'80s'*(3+self.dcdheader.nunit_real),b)
@@ -140,11 +145,12 @@ class DcdFile(object):
 
         for i in xrange(self.dcdheader.nunit_real) :
             self.dcdheader.lunit2mp.append(int(titleblock[i + 4]))
-        ### 
+
         b = self._pickData()
         self.dcdheader.natoms = struct.unpack('i', b)[0]
+        ###         
 
-
+        ### read header block_size
         self.dcdfile.seek(0)
         for i in range(3):
             size1= struct.unpack("i",self.dcdfile.read(4))[0]
@@ -152,10 +158,10 @@ class DcdFile(object):
             struct.unpack("i",self.dcdfile.read(4))[0]
         
         self.dcdheader.blocksize=self.dcdfile.tell()
+        ### 
+        
         self.dcdfile.seek(self.dcdheader.blocksize)
-
         self._checkData()
-
 
 
     def _checkData(self):
@@ -163,15 +169,17 @@ class DcdFile(object):
         header_size=self.dcdheader.blocksize
         coordinate_size=12*(self.dcdheader.natoms+2)
         total_steps=(file_size-header_size)/coordinate_size
+        
         if total_steps==self.nframes:
             print total_steps,"steps in this file"
         else:
-
             print "-"*20,"CAUTION:!!!","-"*20
             print "\t\tIN header:total steps",self.nframes
             print "\t\tThis file size:total steps",total_steps
             print "-"*53
+            
         self.nframes=total_steps
+        
         return True
 
             
@@ -184,6 +192,7 @@ class DcdFile(object):
 
     def _initArg(self):
         parser = argparse.ArgumentParser(description='This scripts defined dcd-style in Cafemol.')
+
         parser.add_argument('inputfile',nargs='?',help="input-file[.dcd]")
         parser.add_argument('-o','--output',nargs='?',help="output-file[.json]",default='out.json')
 
@@ -194,9 +203,11 @@ class DcdFile(object):
         self.read("./test/inp/2gxa.dcd")
         ### broken file(2gxa.dcd)
         #self.read("./test/inp/test.dcd")
-
+        """
+        print "test.dcd case"
         print "10000 frames"
         print "587 atoms"
+        """
         print "%%% my function test---"
         initdata=self.readOneStep()
         initdata=self.readOneStep()
@@ -214,9 +225,9 @@ class DcdFile(object):
         for i,frame in enumerate(self[:5]):
             print i,len(frame)
 
+
         
 if __name__=="__main__":
-    print sys.version_info
     test=DcdFile()
     test.test()
     
