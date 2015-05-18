@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 #editor: ono
 
-import argparse
-import struct
 import os 
+import sys
+import struct
+import argparse
 
 import numpy as np
 
@@ -42,15 +43,26 @@ class DcdFile(object):
     def __getitem__(self,item):
         ### don't soppor slice format.
         tmp_cordinates=[]
-        if isinstance(item,slice):
-            indices=item.indices(self.nframes)
-            print indices
+
         try:
-            self.dcdfile.seek(self.dcdheader.blocksize+frameindex*12*(self.dcdheader.natoms+2))
-            tmp_cordinates= self.readOneStep()        
-            self.dcdfile.seek(0)
+            if isinstance(item,slice):
+                indices=item.indices(self.nframes)
+                for i in range(*indices):
+                    self.dcdfile.seek(self.dcdheader.blocksize+i*12*(self.dcdheader.natoms+2))
+                    tmp_cordinates.append(self.readOneStep())
+                self.dcdfile.seek(0)
+                return tmp_cordinates
+            if item>=0:
+                self.dcdfile.seek(self.dcdheader.blocksize+item*12*(self.dcdheader.natoms+2))
+                tmp_cordinates= self.readOneStep()        
+                self.dcdfile.seek(0)
+            else:
+                item=self.nframes+item
+                self.dcdfile.seek(self.dcdheader.blocksize+item*12*(self.dcdheader.natoms+2))
+                tmp_cordinates= self.readOneStep()        
+                self.dcdfile.seek(0)
         except:
-            errormsg="There is no %dth frame"%(frameindex)
+            errormsg="There is no %dth frame"%(item)
             raise MyError(errormsg)
         return tmp_cordinates
 
@@ -140,11 +152,9 @@ class DcdFile(object):
             struct.unpack("i",self.dcdfile.read(4))[0]
         
         self.dcdheader.blocksize=self.dcdfile.tell()
-
         self.dcdfile.seek(self.dcdheader.blocksize)
 
         self._checkData()
-
 
 
 
@@ -187,20 +197,26 @@ class DcdFile(object):
 
         print "10000 frames"
         print "587 atoms"
-        """
+        print "%%% my function test---"
         initdata=self.readOneStep()
         initdata=self.readOneStep()
-
         print initdata
-        """
+
+        print "%%% __len__ test---"
         print len(self)
 
-        print self[-1]
-        """
-        for i,frame in enumerate(self):
+        print "%%% __getitem__ test---"
+        print len(self[0:10])
+        print len(self[0:10:2])
+        print len(self[::-100])
+
+        print "%%% __iter__ test---"
+        for i,frame in enumerate(self[:5]):
             print i,len(frame)
-        """
+
         
 if __name__=="__main__":
+    print sys.version_info
     test=DcdFile()
     test.test()
+    
