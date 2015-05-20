@@ -22,7 +22,7 @@ class CalcRMSF:
         self.calcRMSF()
 
 
-    def read(self,inputfile,start):
+    def read(self,inputfile,start=0,unit='all'):
         dcd=dcdfile.DcdFile()
         dcd.read(inputfile)
         self.natoms=dcd.dcdheader.natoms
@@ -46,11 +46,16 @@ class CalcRMSF:
         unit: Angstrom**2
         """
         
-        ave_coordinate=np.average(self.coordinates,axis=0)
+        tmpcoord=[]
         nframes=len(self.coordinates)
-        rmsf=np.zeros(self.natoms)
+        ave_coordinate=np.average(self.coordinates,axis=0)
+        
+        rmsf=np.zeros(len(self.coordinates[0]))
 
-        for j in range(10):
+        print ave_coordinate
+        print nframes
+
+        for j in range(nframes):
             t=prody.calcTransformation(ave_coordinate,self.coordinates[j])
             for i in range(self.natoms):
                 delta2=(self.coordinates[j][i].dot(t.getRotation())-ave_coordinate[i])
@@ -71,7 +76,8 @@ class CalcRMSF:
 
 
     def test(self):
-        self.read("./test/inp/m21z14t300n1.dcd",1000)
+        #self.read("./test/inp/m21z14t300n1.dcd",1000) ## monomer
+        self.read("./test/inp/mc1z14t300n1.dcd",1000) ## capsid
         #self.read("./test/inp/2gxa.dcd",100)
         self.doPy()
         
