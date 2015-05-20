@@ -17,7 +17,7 @@ class DcdHeader:
         self.istart = None
         self.nstep_save = None
         self.nstep = None
-        self.nunit_real = None
+        self.nunit = None
         self.delta = None
         self.title = None
         self.tempk = None
@@ -124,7 +124,7 @@ class DcdFile(object):
         for i in xrange(self.dcdheader.natoms) :
             xyz = [x[i], y[i], z[i]]
             coord_matrix.append(xyz)
-            
+
         return coord_matrix
 
 
@@ -144,7 +144,7 @@ class DcdFile(object):
         self.dcdheader.istart = header[2]
         self.dcdheader.nstep_save = header[3]
         self.dcdheader.nstep = header[4]
-        self.dcdheader.nunit_real = header[5]
+        self.dcdheader.nunit = header[5]
         self.dcdheader.delta = header[10]
         
         self.nframes=self.dcdheader.nstep/self.dcdheader.nstep_save+1
@@ -153,11 +153,11 @@ class DcdFile(object):
 
         ### read title block
         b=self._pickData()
-        titleblock=struct.unpack('i'+'80s'*(3+self.dcdheader.nunit_real),b)
+        titleblock=struct.unpack('i'+'80s'*(3+self.dcdheader.nunit),b)
         self.dcdheader.title=titleblock[1]+titleblock[2]
         self.dcdheader.tempk=float(titleblock[3])
 
-        for i in xrange(self.dcdheader.nunit_real) :
+        for i in xrange(self.dcdheader.nunit) :
             self.dcdheader.lunit2mp.append(int(titleblock[i + 4]))
 
         b = self._pickData()
@@ -240,6 +240,41 @@ class DcdFile(object):
         print "%%% __iter__ test---"
         for i,frame in enumerate(self[:5]):
             print i,len(frame)
+
+
+class DcdFile2(DcdFile):
+    def __init__(self):
+        DcdFile.__init__(self)
+
+
+    def _pickData(self):
+        num = struct.unpack('i', self.dcdfile.read(4))[0]
+        b=self.dcdfile.read(num)
+        self.dcdfile.seek(4, os.SEEK_CUR)
+        return b,num
+
+
+    def readOneStep(self):
+        coord_matrix = []
+        at_end=0
+        b = self._pickData()
+        x,at_end = struct.unpack('f' * self.dcdheader.natoms, b)
+        self.dcdfile.seek(at_end,1)
+        b = self._pickData()
+        y = struct.unpack('f' * self.dcdheader.natoms, b)
+        b = self._pickData()
+        z = struct.unpack('f' * self.dcdheader.natoms, b)
+        
+        for i in xrange(self.dcdheader.natoms) :
+            xyz = [x[i], y[i], z[i]]
+            coord_matrix.append(xyz)
+
+        return coord_matrix
+
+    def unitSet(self,unit_index):
+        print unit_index
+        print self.dcdheader.natoms
+        print self.dcdheader.nunit
 
 
         
