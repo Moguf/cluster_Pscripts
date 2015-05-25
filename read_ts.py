@@ -3,6 +3,8 @@ import re
 
 import numpy as np
 
+from my_error import MyError
+
 class ReadTs:
     def __init__(self):
         self.data={}
@@ -10,7 +12,6 @@ class ReadTs:
 
     def main(self,filename):
         self.read(filename)
-        self.transposeData()
         print self.data
 
     def read(self,filename):
@@ -27,6 +28,9 @@ class ReadTs:
 
                 if ilist[1]=="0":
                     #initialize dictonary data
+                    if '**********' in ilist:
+                        raise MyError("CAUTION!!!!:","Enerey is INFINIY!!!Please chcek your Initial structure!!!")
+
                     self.data[key]=[[float(i) for i in ilist[1:]]]
                     continue
                     
@@ -36,9 +40,9 @@ class ReadTs:
                     
                 #read data
                 self.data[key].append([float(i) for i in ilist[1:]])
-                
+        self._transposeData()
 
-    def transposeData(self):
+    def _transposeData(self):
         for key in self.data:
             if key=="unit":
                 continue

@@ -89,6 +89,8 @@ class JsonToCafeinp:
             self.cafestyle.i_flp = self.jsondata["inputfile"]["energy_function"]["i_flp"]
         if self.jsondata["inputfile"]["energy_function"].has_key("i_triple_angle_term"):
             self.cafestyle.i_triple_angle_term = self.jsondata["inputfile"]["energy_function"]["i_triple_angle_term"]
+        if self.jsondata["inputfile"]["energy_function"].has_key("i_coef_from_ninfo"):
+            self.cafestyle.i_coef_from_ninfo = self.jsondata["inputfile"]["energy_function"]["i_coef_from_ninfo"]
 
 
     def _readUnitAndState(self):
@@ -169,6 +171,11 @@ class JsonToCafeinp:
             print 'del_interaction'
             self.cafestyle.DEL_GO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_GO"]
             self.cafestyle.DEL_LGO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_LGO"]
+        #### native_info_sim1
+        if self.cafestyle.b_native_info_sim1:
+            print 'native_info_sim1'
+            self.cafestyle.NINFO = self.jsondata["inputfile"]["optional_block"]["native_info_sim1"]["NINFO"][0]
+
     def _checkBlock(self):
         print "check Block ...",
 
@@ -183,6 +190,7 @@ class JsonToCafeinp:
         self.cafestyle.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("flexible_local")
         self.cafestyle.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("aicg")
         self.cafestyle.b_del_interaction = self.jsondata["inputfile"]["optional_block"].has_key("del_interaction")
+        self.cafestyle.b_native_info_sim1 = self.jsondata["inputfile"]["optional_block"].has_key("native_info_sim1")
         
         if not (self.cafestyle.b_filenames and \
            self.cafestyle.b_job_cntl and \
@@ -220,7 +228,7 @@ class JsonToCafeinp:
     def _makeInputs(self):
         looplist=[]
         loopkeys=[]
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO","NINFO"]
         
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):

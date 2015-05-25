@@ -119,6 +119,9 @@ class MakeCafeJson(CafemolStyleInp):
             _energyfunctiondict["i_flp"]=self.i_flp
         if self.i_triple_angle_term:
             _energyfunctiondict["i_triple_angle_term"]=self.i_triple_angle_term
+        if self.i_coef_from_ninfo:
+            _energyfunctiondict["i_coef_from_ninfo"]=self.i_coef_from_ninfo
+
         ####
 
         return _energyfunctiondict
@@ -177,6 +180,10 @@ class MakeCafeJson(CafemolStyleInp):
             _optblockdict["del_interaction"]={
                 "DEL_GO":self.DEL_GO,
                 "DEL_LGO":self.DEL_LGO
+            }
+        if self.b_native_info_sim1:
+            _optblockdict["native_info_sim1"]={
+                "NINFO":self.NINFO
             }
 
 

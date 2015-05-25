@@ -16,23 +16,21 @@ class PlotTs(ReadTs):
     def __init__(self):
         ReadTs.__init__(self)
         self.args=[]
-        self.inputfile=""           ### you need to input "ts-file".
-        self.outfilename="ouput"    ### default is ouput
-        self.outfiletype=""         ### for example [png,eps,both]
+        self.inputfile=""            ### you need to input "ts-file".
+        self.outfilename="ouput"     ### default is ouput
+        self.outfiletype=""          ### for example [png,eps,both]
         self.datatype=['qscore']     ### for example [qsocre,local, ...]
         self._initArg()
 
 
     def main(self):
         self.read(self.inputfile)   ### ReadTs
-        self.transposeData()        ### ReadTs
         self.plotTs()
 
         
     def plotTs(self):
         fig=plt.figure()
         self.ax=fig.add_subplot(111)
-        
         self._setPlotInit()
 
         #for idatatype in self.outdata:
