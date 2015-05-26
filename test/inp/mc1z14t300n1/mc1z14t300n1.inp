@@ -1,5 +1,5 @@
 <<<< filenames
-filename = mc1z14t300n1t304n1
+filename = mc1z14t300n1
 path = /home/ono/misc/cluster_pscripts/test/data/mc1z14t300n1
 OUTPUT pdb crd dcd psf rst
 path_pdb = ~/mvmtrunk2/pdb
@@ -36,7 +36,7 @@ n_tstep(1) = 10000000
 tstep_size = 0.1
 n_step_save = 1000
 n_step_neighbor = 100
-tempk = 304.0
+tempk = 300.0.0
 n_seed = 1
 i_com_zeroing = 1
 i_no_trans_rot = 0

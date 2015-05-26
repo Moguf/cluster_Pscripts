@@ -4,6 +4,7 @@ path = /home/ono/misc/cluster_pscripts/test/data/mc1z14t300n1
 OUTPUT pdb crd dcd psf rst
 path_pdb = ~/mvmtrunk2/pdb
 path_ini = ~/mvmtrunk2/pdb
+path_natinfo = ~/mvmtrunk2/ninfo
 path_para = ~/mvmtrunk2/para
 >>>>
 

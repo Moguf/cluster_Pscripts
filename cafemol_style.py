@@ -415,7 +415,7 @@ class CafemolStyleInp:
                 self.DEL_LGO.append(ilist[0])
             ###### native_info_sim1
             if re.search(r"^NINFO",ilist[0]):
-                self.NINFO.append(ilist[0])
+                self.NINFO.append(ilist)
 
 
     def show(self):
