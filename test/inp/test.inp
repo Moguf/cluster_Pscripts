@@ -5,7 +5,7 @@ OUTPUT pdb crd dcd psf rst
 path_pdb = ~/mvmtrunk2/pdb
 path_ini = ~/mvmtrunk2/pdb
 path_para = ~/mvmtrunk2/para
-path_ninfo = ~/mvmtrunk2/ninfo
+path_natinfo = ~/mvmtrunk2/ninfo
 >>>>
 
 <<<< job_cntl

@@ -7,26 +7,26 @@
         "4": "#$ -N ", 
         "7": [
             "#$ -pe smp ", 
-            3
+            1
         ], 
         "6": [
             "#$ -q ", 
-            "node01-08.q"
+            "all.q"
         ], 
         "9": "./cafemol ./inp/test.inp", 
         "8": [
             "OMP_NUM_THREADS =", 
-            3
+            1
         ]
     }, 
     "BASEDIR": "./test/", 
     "inputfile": {
         "md_information": {
-            "n_seed": [5], 
+            "n_seed": "1", 
             "i_del_int": "1", 
             "i_no_trans_rot": "0", 
             "n_step_sim": "1", 
-            "tempk": [273,313,1],
+            "tempk": "300.0", 
             "n_step_save": "1000", 
             "n_step_neighbor": "100", 
             "tstep_size": "0.1", 
@@ -44,6 +44,7 @@
         }, 
         "filenames": {
             "path_para": "~/mvmtrunk2/para", 
+            "path_natinfo": "~/mvmtrunk2/ninfo", 
             "filename": {
                 "index": "", 
                 "prefix": "", 
@@ -63,7 +64,11 @@
         }, 
         "energy_function": {
             "i_flp": "1", 
-            "i_coef_from_ninfo": "1", 
+            "i_coef_from_ninfo": [
+                "i_coef_from_ninfo", 
+                "=", 
+                "1"
+            ], 
             "i_use_atom_protein": "0", 
             "i_triple_angle_term": "0", 
             "i_use_atom_dna": "0", 
@@ -81,10 +86,7 @@
         "optional_block": {
             "native_info_sim1": {
                 "NINFO": [
-                    [
-                        "NINFO(all/all)", 
-                        "emcafecap.ninfo"
-                    ]
+                    "NINFO(all/all)"
                 ]
             }, 
             "electrostatic": {

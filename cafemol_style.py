@@ -360,7 +360,7 @@ class CafemolStyleInp:
             if re.search(r"^i_triple_angle_term$",ilist[0]):
                 self.i_triple_angle_term = ilist[-1]
             if re.search(r"^i_coef_from_ninfo$",ilist[0]):
-                self.i_coef_from_ninfo = ilist
+                self.i_coef_from_ninfo = ilist[-1]
                 
             ##md_information
             if re.search(r"^n_step_sim$",ilist[0]):
