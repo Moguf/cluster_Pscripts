@@ -242,7 +242,9 @@ class JsonToCafeinp:
             for i,key in enumerate(loopkeys):
                 outclass.__dict__[key]=str(int(ilist[i]))
                 if key=="n_seed":
+
                     tmp="%s%04d" %key[0],int(ilist[i])
+
                     outclass.filename["index"]+=tmp
                 else:
                     outclass.filename["index"]+=key[0]+str(ilist[i])
