@@ -84,7 +84,7 @@
                 "NINFO": [
                     [
                         "NINFO(all/all)", 
-                        "emcafecap.ninfo"
+                        "emcafecap.ninfo","test.ninfo"
                     ]
                 ]
             }, 

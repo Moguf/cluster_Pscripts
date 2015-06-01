@@ -241,7 +241,11 @@ class JsonToCafeinp:
             outclass=copy.deepcopy(self.cafestyle)
             for i,key in enumerate(loopkeys):
                 outclass.__dict__[key]=str(int(ilist[i]))
-                outclass.filename["index"]+=key[0]+str(ilist[i])
+                if key=="n_seed":
+                    tmp="%s%04d" %key[0]+str(ilist[i])
+                    outclass.filename["index"]+=tmp
+                else:
+                    outclass.filename["index"]+=key[0]+str(ilist[i])
             outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
 
             outclass.write(self.INPDIR+"/"+outclass.filename+".inp")
