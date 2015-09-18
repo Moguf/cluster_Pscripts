@@ -1,4 +1,5 @@
-#!/home/ono/Python-2.7.9/python
+#!/rei_fs1/ono/python/bin/python
+####!/home/ono/Python-2.7.9/python
 #coding:utf-8
 #editor:ono
 #This script makes input files and submits queue.
@@ -44,6 +45,7 @@ class SubmitQueue:
         
         for iqsub in qsublist:
             exe=["qsub",iqsub]
+            #print exe
             subprocess.Popen(exe)
 
     def _initArg(self):
