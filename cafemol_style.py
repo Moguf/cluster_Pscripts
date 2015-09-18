@@ -21,6 +21,7 @@ class CafemolStyleInp:
         self.b_flexible_local = False
         self.b_aicg = False
         self.b_del_interaction = False
+        self.b_native_info_sim1 = False
 
         ##########Content names
         ##filenames contents
@@ -69,6 +70,7 @@ class CafemolStyleInp:
         self.i_com_zeroing_ini = False
         self.i_com_zeroing = False
         self.i_no_trans_rot = False
+        self.i_coef_from_ninfo = False
         ####optional parameters
         self.i_implig = False
         self.i_redef_para = False
@@ -98,10 +100,13 @@ class CafemolStyleInp:
         #### flexible_local
         self.k_dih = False
         self.k_ang = False
-        #### DEL_GO
+        #### DEL_GO,DEL_LGO
         self.DEL_GO = []
         self.DEL_LGO = []
-        
+        #### NINFO
+        self.NINFO = []
+
+
     def test(self):
         self.read("./test/inp/test.inp")
         self.check()
@@ -173,6 +178,7 @@ class CafemolStyleInp:
         otxt+=self._writeContents("i_output_energy_style")
         otxt+=self._writeContents("i_flp")
         otxt+=self._writeContents("i_triple_angle_term")
+        otxt+=self._writeContents("i_coef_from_ninfo")
         otxt+=">>>>\n\n"
         
         ##md_information
@@ -197,6 +203,7 @@ class CafemolStyleInp:
         otxt+=self._writeOptionalBlock("b_flexible_local")
         otxt+=self._writeOptionalBlock("b_electrostatic")
         otxt+=self._writeOptionalBlock("b_del_interaction")
+        otxt+=self._writeOptionalBlock("b_native_info_sim1")
 
         ofile.write(otxt)
         ofile.close()
@@ -225,6 +232,9 @@ class CafemolStyleInp:
             elif bkey=="b_del_interaction":
                 otxt+=self._writeContents("DEL_GO")
                 otxt+=self._writeContents("DEL_LGO")
+            elif bkey=="b_native_info_sim1":
+                otxt+=self._writeContents("NINFO")
+
             otxt+=">>>>\n\n"
             return otxt
         else:
@@ -232,7 +242,7 @@ class CafemolStyleInp:
     
         
     def _writeContents(self,key):
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO","NINFO"]
         if self.__dict__[key]:
             if not key in ignorelist:
                 return key+" = "+self.__dict__[key]+"\n"
@@ -282,6 +292,8 @@ class CafemolStyleInp:
                 self.b_aicg = iline.endswith('aicg')
             if iline.endswith('del_interaction'):
                 self.b_del_interaction = iline.endswith('del_interaction')
+            if iline.endswith('native_info_sim1'):
+                self.b_native_info_sim1 = iline.endswith('native_info_sim1')
 
             
     def _readContents(self):
@@ -318,7 +330,7 @@ class CafemolStyleInp:
                 self.i_initial_state = ilist[-1]
             if re.search(r"^i_initial_velo$",ilist[0]):
                 self.i_initial_velo = ilist[-1]
-            if re.search(r"^self.i_periodic$",ilist[0]):
+            if re.search(r"^i_periodic$",ilist[0]):
                 self.i_periodic = ilist[-1]
             
             ###unit_and_state
@@ -345,6 +357,8 @@ class CafemolStyleInp:
                 self.i_flp = ilist[-1]
             if re.search(r"^i_triple_angle_term$",ilist[0]):
                 self.i_triple_angle_term = ilist[-1]
+            if re.search(r"^i_coef_from_ninfo$",ilist[0]):
+                self.i_coef_from_ninfo = ilist[-1]
                 
             ##md_information
             if re.search(r"^n_step_sim$",ilist[0]):
@@ -397,6 +411,10 @@ class CafemolStyleInp:
                 self.DEL_GO.append(ilist[0])
             if re.search(r"^DEL_LGO",ilist[0]):
                 self.DEL_LGO.append(ilist[0])
+            ###### native_info_sim1
+            if re.search(r"^NINFO",ilist[0]):
+                self.NINFO.append(ilist)
+
 
     def show(self):
         for i in self.__dict__.keys():
