@@ -44,8 +44,8 @@ class SubmitQueue:
         
         for iqsub in qsublist:
             exe=["qsub",iqsub]
-            print " ".join(exe)
-            #subprocess.Popen(exe)
+            #print " ".join(exe)
+            subprocess.Popen(exe)
 
     def _initArg(self):
         parser=argparse.ArgumentParser(description='This script submits torque-queue from cafe-json')
