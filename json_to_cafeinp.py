@@ -172,6 +172,16 @@ class JsonToCafeinp:
             print 'del_interaction'
             self.cafestyle.DEL_GO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_GO"]
             self.cafestyle.DEL_LGO = self.jsondata["inputfile"]["optional_block"]["del_interaction"]["DEL_LGO"]
+        #### fix_para
+        if self.cafestyle.b_fix_para:
+            print 'fix_para'
+            self.cafestyle.FIX_MP = self.jsondata["inputfile"]["optional_block"]["fix_para"]["FIX_MP"]
+        #### pulling_para
+        if self.cafestyle.b_pulling_para:
+            print 'pulling_para'
+            self.cafestyle.PULL_CF = self.jsondata["inputfile"]["optional_block"]["pulling_para"]["PULL_CF"]
+            #self.cafestyle.PULL_CV = self.jsondata["inputfile"]["optional_block"]["pulling_para"]["PULL_CV"]
+
         #### native_info_sim1
         if self.cafestyle.b_native_info_sim1:
             print 'native_info_sim1'
@@ -191,6 +201,8 @@ class JsonToCafeinp:
         self.cafestyle.b_flexible_local = self.jsondata["inputfile"]["optional_block"].has_key("flexible_local")
         self.cafestyle.b_aicg = self.jsondata["inputfile"]["optional_block"].has_key("aicg")
         self.cafestyle.b_del_interaction = self.jsondata["inputfile"]["optional_block"].has_key("del_interaction")
+        self.cafestyle.b_fix_para = self.jsondata["inputfile"]["optional_block"].has_key("fix_para")
+        self.cafestyle.b_pulling_para = self.jsondata["inputfile"]["optional_block"].has_key("pulling_para")                
         self.cafestyle.b_native_info_sim1 = self.jsondata["inputfile"]["optional_block"].has_key("native_info_sim1")
         
         if not (self.cafestyle.b_filenames and \
@@ -229,15 +241,17 @@ class JsonToCafeinp:
     def _makeInputs(self):
         looplist=[]
         loopkeys=[]
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO","NINFO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO","NINFO","PULL_CV","FIX_MP","PULL_CF"]
         
         for ikey in self.cafestyle.__dict__.keys():
             if isinstance(self.cafestyle.__dict__[ikey],list):
+                # finding list-data from cafestyle.
                 if not ikey in ignorelist:
+                    print ikey
                     tmplist=self._listsubsitution(self.cafestyle.__dict__[ikey])
                     looplist.append(tmplist)
                     loopkeys.append(ikey)
-
+                    
         for index,ilist in enumerate(itertools.product(*looplist)):
             outclass=copy.deepcopy(self.cafestyle)
             for i,key in enumerate(loopkeys):
@@ -246,7 +260,6 @@ class JsonToCafeinp:
                     outclass.__dict__[key]=str(float(ilist[i]))
                 else:    
                     outclass.__dict__[key]=str(int(ilist[i]))
-                outclass.filename["index"]+=key[0]+str(ilist[i])
 
                 outclass.__dict__[key]=str(int(ilist[i]))
                 if key=="n_seed":
