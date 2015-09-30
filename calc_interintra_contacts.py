@@ -18,20 +18,12 @@ class CalcInterIntraContacts(object):
         self.dcdfile = ''
         self.ninfofile = ''
         self.pdbfile = ''
+        self.contact_group=[]
 
-    def readPDB(self,pdbfile):
-        print '@PDB: '+pdbfile
-
-
-    def readDcd(self,dcdfile):
-        print '@DCD: '+dcdfile
-        self.dcddata=DcdFile()
-        self.dcddata.read(dcdfile)
-        print self.dcddata[0]
-
-    def readNinfo(self,ninfofile):
-        print '@NINFO: '+ninfofile
-
+    def main(self):
+        self.__initArg()
+        self.read()
+        self.calcInterIntraContacts()
 
     def read(self):
         if self.dcdfile:
@@ -44,23 +36,41 @@ class CalcInterIntraContacts(object):
             
         if self.ninfofile:
             self.readNinfo(self.ninfofile)
-        
+
+
+    def readPDB(self,pdbfile):
+        print '@PDB:\t'+pdbfile
+
+
+    def readDcd(self,dcdfile):
+        print '@DCD:\t'+dcdfile
+        self.dcddata=DcdFile()
+        self.dcddata.read(dcdfile)
+
+
+    def readNinfo(self,ninfofile):
+        print '@NINFO:\t'+ninfofile
+        tklass=ReadNinfo()
+        tklass.read(ninfofile)
+        self.ninfodata=tklass.data
+
+
+    def _preCalc(self):
+        print '@CALCULATEING:\t'+" ".join(self.contact_group)
+        if len(self.contact_group) == 1:
+            if self.contact_group[0] == 'all':
+                print self.ninfodata['contact']
+
+
     def calcInterIntraContacts(self):
-        pass
-
-
-    def main(self):
-        self.__initArg()
-        self.read()
-
+        self._preCalc()
         
-
     def __initArg(self):
         scriptusage = '%(prog)s [-d] [-p] [-n]'
         description = ('''\
 ===================================================================
 ===     Calculating qscores of monomer and inter-monomer.       ===
-===     This script is specific for virus structures.           ===
+===================================================================
 
  [EXAMLE] %(prog)s -d cafemol.dcd -n cafemol.ninfo -o png(default)
  [EXAMLE] %(prog)s -p protein.pdb -n cafemol.ninfo -o png eps json
@@ -72,12 +82,13 @@ class CalcInterIntraContacts(object):
         parser.add_argument('-p','--pdb',type=str,help='Protein structure file ,PDB style.',default=None)
         parser.add_argument('-n','--ninfo',type=str,help='Native Info file from cafemol software.',required=True)
         parser.add_argument('-o','--output',nargs='*',help='Output type, png, eps, json(default).',default=['json'])
+        parser.add_argument('-c','--contact',nargs='*',help='Output type, png, eps, json(default).',default=['all'])
         
         args = parser.parse_args()
         self.dcdfile=args.dcd
         self.ninfofile=args.ninfo
-        self.pdvfile=args.pdb
-
+        self.pdbfile=args.pdb
+        self.contact_group=args.contact
         print self.__dict__
         
 if __name__ == "__main__":
