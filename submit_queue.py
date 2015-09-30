@@ -1,4 +1,5 @@
-#!/home/ono/Python-2.7.9/python
+#!/rei_fs1/ono/python/bin/python
+####!/home/ono/Python-2.7.9/python
 #coding:utf-8
 #editor:ono
 #This script makes input files and submits queue.
@@ -44,8 +45,9 @@ class SubmitQueue:
         
         for iqsub in qsublist:
             exe=["qsub",iqsub]
-            print " ".join(exe)
-            #subprocess.Popen(exe)
+            #print " ".join(exe)
+            #print exe
+            subprocess.Popen(exe)
 
     def _initArg(self):
         parser=argparse.ArgumentParser(description='This script submits torque-queue from cafe-json')

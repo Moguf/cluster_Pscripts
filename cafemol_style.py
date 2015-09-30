@@ -21,6 +21,8 @@ class CafemolStyleInp:
         self.b_flexible_local = False
         self.b_aicg = False
         self.b_del_interaction = False
+        self.b_pulling_para = False
+        self.b_fix_para = False                
         self.b_native_info_sim1 = False
 
         ##########Content names
@@ -100,9 +102,15 @@ class CafemolStyleInp:
         #### flexible_local
         self.k_dih = False
         self.k_ang = False
-        #### DEL_GO,DEL_LGO
+        #### del_interaction
         self.DEL_GO = []
         self.DEL_LGO = []
+        #### fix_para
+        self.FIX_MP = []
+        #### pulling_para
+        self.PULL_CF = []
+        self.PULL_CV = []
+
         #### NINFO
         self.NINFO = []
 
@@ -196,6 +204,8 @@ class CafemolStyleInp:
         otxt+=self._writeContents("i_com_zeroing")
         otxt+=self._writeContents("i_no_trans_rot")
         otxt+=self._writeContents("i_del_int")
+        otxt+=self._writeContents("i_fix")
+        otxt+=self._writeContents("i_pulling")
         otxt+=">>>>\n\n"
         
         ## optional_block
@@ -203,6 +213,8 @@ class CafemolStyleInp:
         otxt+=self._writeOptionalBlock("b_flexible_local")
         otxt+=self._writeOptionalBlock("b_electrostatic")
         otxt+=self._writeOptionalBlock("b_del_interaction")
+        otxt+=self._writeOptionalBlock("b_fix_para")
+        otxt+=self._writeOptionalBlock("b_pulling_para")
         otxt+=self._writeOptionalBlock("b_native_info_sim1")
 
         ofile.write(otxt)
@@ -234,6 +246,10 @@ class CafemolStyleInp:
                 otxt+=self._writeContents("DEL_LGO")
             elif bkey=="b_native_info_sim1":
                 otxt+=self._writeContents("NINFO")
+            elif bkey=="b_fix_para":
+                otxt+=self._writeContents("FIX_MP")
+            elif bkey=="b_pulling_para":
+                otxt+=self._writeContents("PULL_CF")
 
             otxt+=">>>>\n\n"
             return otxt
@@ -242,11 +258,9 @@ class CafemolStyleInp:
     
         
     def _writeContents(self,key):
-        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO","NINFO"]
+        ignorelist=["OUTPUT","NLOCAL","LOCAL","n_tstep","read_pdb","DEL_GO","DEL_LGO","NINFO","FIX_MP","PULL_CF"]
         if self.__dict__[key]:
             if not key in ignorelist:
-                if key == "tempk":
-                    return key+" = "+self.__dict__[key]+".0\n"
                 return key+" = "+self.__dict__[key]+"\n"
             else:
                 if key in ["DEL_GO","DEL_LGO"]:
@@ -294,6 +308,10 @@ class CafemolStyleInp:
                 self.b_aicg = iline.endswith('aicg')
             if iline.endswith('del_interaction'):
                 self.b_del_interaction = iline.endswith('del_interaction')
+            if iline.endswith('fix_para'):
+                self.b_fix_para = iline.endswith('fix_para')
+            if iline.endswith('pulling_para'):
+                self.b_pulling_para = iline.endswith('pulling_para')
             if iline.endswith('native_info_sim1'):
                 self.b_native_info_sim1 = iline.endswith('native_info_sim1')
 
@@ -389,6 +407,10 @@ class CafemolStyleInp:
                 self.i_no_trans_rot = ilist[-1]
             if re.search(r"^i_del_int$",ilist[0]):
                 self.i_del_int = ilist[-1]
+            if re.search(r"^i_fix$",ilist[0]):
+                self.i_fix = ilist[-1]
+            if re.search(r"^i_pulling$",ilist[0]):
+                self.i_pulling = ilist[-1]
 
             ##### optional blocks
             ###### aicg
@@ -413,6 +435,14 @@ class CafemolStyleInp:
                 self.DEL_GO.append(ilist[0])
             if re.search(r"^DEL_LGO",ilist[0]):
                 self.DEL_LGO.append(ilist[0])
+            ###### fix_para
+            if re.search(r"^FIX_MP",ilist[0]):
+                self.FIX_MP=ilist
+            ###### pulling_para
+            if re.search(r"^PULL_CF",ilist[0]):
+                self.PULL_CF=ilist
+            if re.search(r"^PULL_CV",ilist[0]):
+                self.PULL_CV=ilist
             ###### native_info_sim1
             if re.search(r"^NINFO",ilist[0]):
                 self.NINFO.append(ilist)
