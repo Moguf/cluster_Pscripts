@@ -1,4 +1,5 @@
 #!/home/ono/Python-2.7.9/python
+####!/rei_fs1/ono/python/bin/python
 #coding:utf-8
 #editor:ono
 #This script makes input files from cafe_json
@@ -40,7 +41,6 @@ class JsonToCafeinp:
         self._readOptionalBlock()
 
 
-
     def makeInps(self):
         self._mkdirOutInp()
         self.cafestyle.path = self.OUTDIR
@@ -54,6 +54,7 @@ class JsonToCafeinp:
         self.cafestyle.path = self.jsondata["inputfile"]["filenames"]["path"]
         self.cafestyle.path_ini = self.jsondata["inputfile"]["filenames"]["path_ini"]
         self.cafestyle.path_para = self.jsondata["inputfile"]["filenames"]["path_para"]
+
         
         ### optional parts
         if self.jsondata["inputfile"]["filenames"].has_key("path_aicg"):
@@ -240,12 +241,20 @@ class JsonToCafeinp:
         for index,ilist in enumerate(itertools.product(*looplist)):
             outclass=copy.deepcopy(self.cafestyle)
             for i,key in enumerate(loopkeys):
+
+                if key=="tempk":
+                    outclass.__dict__[key]=str(float(ilist[i]))
+                else:    
+                    outclass.__dict__[key]=str(int(ilist[i]))
+                outclass.filename["index"]+=key[0]+str(ilist[i])
+
                 outclass.__dict__[key]=str(int(ilist[i]))
                 if key=="n_seed":
                     tmp="%s%04d" %(key[0],int(ilist[i]))
                     outclass.filename["index"]+=tmp
                 else:
                     outclass.filename["index"]+=key[0]+str(ilist[i])
+
             outclass.filename=self.cafestyle.filename["prefix"]+self.cafestyle.filename["name"]+outclass.filename["index"]
 
             outclass.write(self.INPDIR+"/"+outclass.filename+".inp")
