@@ -72,34 +72,40 @@ class CalcRMSF:
     def doPyForCapsid(self,resides=0,subunit=60):
         print "for mvm capsid"
         print "calculating ...."
-        import prody
+
         resides=587
         tmpcoord=[]
         nframes=len(self.coordinates)
-        ignore_residue=38
+        self.ignore_residue=38
 
-
-        self.subunits_coord=[]
+        
+        self.subunits_coord=[[] for i in range(subunit)]
         
         for i in range(nframes):
             for k in range(subunit):
-                self.subunits_coord.append(self.coordinates[i][k*587+ignore_residue:587*(k+1)])
-                
-        self.subunits_coord=np.array(self.subunits_coord)
+                self.subunits_coord[k].append(self.coordinates[i][k*587+self.ignore_residue:587*(k+1)])
+
+        for i in range(subunit):
+            self.cal_bfactor.append(self._calcRMSFforSubunit(self.subunits_coord[i]))
+
+    def _calcRMSFforSubunit(self,subunit_traj):
+        import prody
+        subunit_traj=np.array(subunit_traj)
         ensemble=prody.Ensemble()
-        ensemble.addCoordset(self.subunits_coord)
+        ensemble.addCoordset(subunit_traj)
         rmsf=ensemble.getRMSFs()
         bfactor=8/3*np.pi**2*rmsf**2
-        self.cal_bfactor=[0 for i in range(ignore_residue)]+bfactor.tolist()
+        return [0 for i in range(self.ignore_residue)]+bfactor.tolist()
+        
 
     def doC(self):
         pass
+
 
     def _initArg(self):
         parser = argparse.ArgumentParser(description='This scripts calculate RMSF from dcd-file.')
         parser.add_argument('inputfile',nargs='?',help="input-file[.dcd]")
         self.dcdfile=parser.parse_args().inputfile
-
 
     def test(self):
         #self.read("./test/inp/m21z14t300n1.dcd",1000) ## monomer

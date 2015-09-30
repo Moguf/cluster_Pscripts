@@ -6,7 +6,8 @@ Key Ideas: pdf
 """
 import argparse
 import sys
-
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from read_ts import ReadTs
@@ -38,7 +39,7 @@ class PlotTs(ReadTs):
         index=self.data['unit'].index(self.datatype[0])
         #dict[key] -> list[index]
         
-        self.ax.plot(self.data['all'][0],self.data['all'][index])
+        self.ax.plot(self.data['all'][0],self.data['all'][index],lw=3)
         self._saveFig()
 
         
