@@ -35,7 +35,7 @@ class MakeCafeJson(CafemolStyleInp):
                    }
 
         jsondict={
-            "BASEDIR":".",
+            "BASEDIR":"..",
             "inputfile":inputdict,
             "queue":self._makeQueue()
         }
@@ -138,7 +138,7 @@ class MakeCafeJson(CafemolStyleInp):
             'n_seed':self.n_seed,
             'i_com_zeroing':self.i_com_zeroing,
             'i_no_trans_rot':self.i_no_trans_rot,
-        }
+            }
         
         ####optional keys        
         if self.n_step_rst:
@@ -149,6 +149,11 @@ class MakeCafeJson(CafemolStyleInp):
             _mdinformationdict['i_com_zeroing_ini']=self.i_com_zeroing_ini
         if self.i_del_int:
             _mdinformationdict['i_del_int']=self.i_del_int
+        if self.i_fix:
+            _mdinformationdict['i_fix']=self.i_fix
+        if self.i_pulling:
+            _mdinformationdict['i_pulling']=self.i_pulling
+
         ####
         
         return _mdinformationdict
@@ -180,6 +185,14 @@ class MakeCafeJson(CafemolStyleInp):
             _optblockdict["del_interaction"]={
                 "DEL_GO":self.DEL_GO,
                 "DEL_LGO":self.DEL_LGO
+            }
+        if self.b_fix_para:
+            _optblockdict["fix_para"]={
+                "FIX_MP":self.FIX_MP,
+            }
+        if self.b_pulling_para:
+            _optblockdict["pulling_para"]={
+                "PULL_CF":self.PULL_CF,
             }
         if self.b_native_info_sim1:
             _optblockdict["native_info_sim1"]={
