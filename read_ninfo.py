@@ -2,6 +2,8 @@
 import re
 import argparse
 
+import numpy as np
+
 class ReadNinfo:
     def __init__(self):
         self.data={}
@@ -82,6 +84,12 @@ class ReadNinfo:
             return int(s)
         except ValueError:
             return float(s)
+
+    def collectContact(self):
+        """this method returns contacts matrix([[unti1 unit2 num1 num2 length] ...]
+        ,type=numpy.array,value-type=float)."""
+
+        return np.array(self.data['contact'])[:,np.array([1,2,3,4,7])].astype(np.float)
 
     def _initArg(self):
         parser = argparse.ArgumentParser(description='This script make json-style of cafemol-ninfo')

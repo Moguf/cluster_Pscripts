@@ -13,6 +13,8 @@ from dcdfile import DcdFile
 from read_ninfo import ReadNinfo
 from my_error import InputError
 
+
+
 class CalcInterIntraContacts(object):
     def __init__(self):
         self.dcdfile = ''
@@ -21,11 +23,12 @@ class CalcInterIntraContacts(object):
         self.contact_group=[]
 
     def main(self):
-        self.__initArg()
-        self.read()
-        self.calcInterIntraContacts()
+        self._initArg()
+        self._read()
+        self._preCalc()
 
-    def read(self):
+
+    def _read(self):
         if self.dcdfile:
             self.readDcd(self.dcdfile)
         elif self.pdbfile:
@@ -40,32 +43,37 @@ class CalcInterIntraContacts(object):
 
     def readPDB(self,pdbfile):
         print '@PDB:\t'+pdbfile
-
+        
 
     def readDcd(self,dcdfile):
         print '@DCD:\t'+dcdfile
-        self.dcddata=DcdFile()
+        self.dcddata = DcdFile()
         self.dcddata.read(dcdfile)
 
-
+        
     def readNinfo(self,ninfofile):
         print '@NINFO:\t'+ninfofile
-        tklass=ReadNinfo()
+        tklass = ReadNinfo()
         tklass.read(ninfofile)
-        self.ninfodata=tklass.data
+        self.contacts = tklass.collectContact()
+        print '@@NINFO:MEMORY: %7.2lfMb' % (self.contacts.nbytes/1024.0**2)
+        tklass = None
 
 
     def _preCalc(self):
-        print '@CALCULATEING:\t'+" ".join(self.contact_group)
+        print '@CONTACTS:\t\t'+" ".join(self.contact_group)
         if len(self.contact_group) == 1:
             if self.contact_group[0] == 'all':
-                print self.ninfodata['contact']
+                self.calcInterIntraContacts(self.dcddata[:3],self.contacts)
+                self.dcddata = None
 
-
-    def calcInterIntraContacts(self):
-        self._preCalc()
+    def calcInterIntraContacts(self,coordinates,contacts):
+        coordinates = np.array(coordinates)
+        print '@@CALCULATING:MEMORY: %7.2lfMb' % ((coordinates.nbytes+contacts.nbytes)/1024.0**2)
         
-    def __initArg(self):
+        
+        
+    def _initArg(self):
         scriptusage = '%(prog)s [-d] [-p] [-n]'
         description = ('''\
 ===================================================================
@@ -89,7 +97,6 @@ class CalcInterIntraContacts(object):
         self.ninfofile=args.ninfo
         self.pdbfile=args.pdb
         self.contact_group=args.contact
-        print self.__dict__
         
 if __name__ == "__main__":
     test=CalcInterIntraContacts()
