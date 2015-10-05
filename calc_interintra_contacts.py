@@ -3,18 +3,23 @@
 import subprocess
 import argparse
 import multiprocessing as mp
+import resource
 
 import numpy as np
 import scipy.spatial.distance as scidist
 #import matplotlib 
 #matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib import cm
 
 from dcdfile import DcdFile
 from read_ninfo import ReadNinfo
 from my_error import InputError
 
+import sys
 
+import ccontact
+import cqscore
 
 class CalcInterIntraContacts(object):
     def __init__(self):
@@ -23,11 +28,21 @@ class CalcInterIntraContacts(object):
         self.pdbfile = ''
         self.contact_group=[]
 
+    def _usage(self):
+        Gbyte = 1024*1024*1024
+        soft = 20*Gbyte
+        ## set Memory limit = 10G
+        rsrc = resource.RLIMIT_AS
+        resource.setrlimit(rsrc,(soft,-1))
+
+        
     def main(self):
         self._initArg()
+        self._usage()
         self._read()
         self._preCalc()
         self._checkMemory()
+
 
     def _read(self):
         if self.dcdfile:
@@ -65,16 +80,33 @@ class CalcInterIntraContacts(object):
         print '@CONTACTS:\t\t'+" ".join(self.contact_group)
         if len(self.contact_group) == 1:
             if self.contact_group[0] == 'all':
-                self.calcInterIntraContacts(self.dcddata[-4:],self.contacts)
+                self.calcInterIntraContacts(self.dcddata,self.contacts)
+                #self.doPyCalc(self.dcddata,self.contacts)
                 self.dcddata = None
 
 
     def calcInterIntraContacts(self,coordinates,contacts):
-        coordinates = np.array(coordinates)
-        print '@@CALCULATING:MEMORY: %7.2lfMb' % ((coordinates.nbytes+contacts.nbytes)/1024.0**2)
-        self.doPyCalc(coordinates,contacts)
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        
+        def cal_q(subunit1=1,subunit2=1):
+            bool_mat1 = np.logical_and(contacts[:,0] != contacts[:,1],contacts[:,0]==subunit1)
+            bool_mat2 = np.logical_and(contacts[:,0] != contacts[:,1],contacts[:,1]==subunit2)
+            rows = np.where(np.logical_and(bool_mat1, bool_mat2))
+            qscore = []
+            for coordinate in coordinates[:]:
+                qscore.append(cqscore.cqscore(coordinate,contacts[rows,2:][0].tolist()))
+            return qscore
 
-
+        ax.plot(cal_q(1,2),'b')
+        ax.plot(cal_q(1,5),'b')
+        ax.plot(cal_q(1,10),'r')
+        ax.plot(cal_q(1,23),'r')
+        ax.plot(cal_q(1,6),'g')
+        ax.set_ylim([0,1])
+        plt.savefig("q.png")
+        plt.show()
+        
 
     def doPyCalc(self,coordinates,contacts):
         distmat = scidist.cdist(coordinates[-1],coordinates[-1])
@@ -82,8 +114,6 @@ class CalcInterIntraContacts(object):
         num_subunits = 60  ## for virus capsid
         total_cmat = np.zeros((num_subunits,num_subunits))
         now_cmat = np.zeros((num_subunits,num_subunits))
-        hex_cmat = np.zeros((num_subunits/5,num_subunits/5))
-        tri_cmat = np.zeros((num_subunits/3,num_subunits/3))
 
         print '@@DIST:MEMORY: %7.2lfMb' % (distmat.nbytes/1024.0**2)
 
@@ -101,37 +131,42 @@ class CalcInterIntraContacts(object):
         qmat = now_cmat/total_cmat
 
         ###plot
-        fig = plt.figure()
+        fig = plt.figure(dpi=100,figsize=(20,15))
         ax = fig.add_subplot(111)
-        cax = ax.matshow(qmat,interpolation='nearest')
+        cmap = plt.get_cmap('jet',10)
+        cax = ax.matshow(qmat,interpolation='nearest',cmap=cmap)
         ax.grid(True)
+        cax.set_clim(vmin=0, vmax=1)
         fig.colorbar(cax)
+        
         ###text
         ind_array = np.arange(60)
         x,y = np.meshgrid(ind_array, ind_array)
         #for x_val,y_val in zip(x.flatten(), y.flatten()):
         for x_val,y_val in zip(cols,rows):
             #ax.text(x_val, y_val, '3' , va='center', ha='center')
-            ax.scatter(x_val, y_val,marker='p',s=60,facecolors='none', edgecolors='b')
-        print 352<=total_cmat + 355>=total_cmat
-        rows,cols = np.where(*(352<=total_cmat and total_cmat<=355))
+            ax.scatter(x_val, y_val,marker='^',s=80,facecolors='none', edgecolors='b')
+        print 
+        
+        rows,cols = np.where(np.logical_and(352<=total_cmat,355>=total_cmat))
         for x_val,y_val in zip(cols,rows):
             #ax.text(x_val, y_val, '5' , va='center', ha='center')
-            ax.scatter(x_val, y_val,marker='^',s=60,facecolors='none', edgecolors='b')
+            ax.scatter(x_val, y_val,marker='p',s=80,facecolors='none', edgecolors='b')
         rows,cols = np.where(total_cmat==208)
         for x_val,y_val in zip(cols,rows):
             #ax.text(x_val, y_val, '5' , va='center', ha='center')
-            ax.scatter(x_val, y_val,marker='d',s=60,facecolors='none', edgecolors='b')
-            
-
+            ax.scatter(x_val, y_val,marker='d',s=80,facecolors='none', edgecolors='b')
+        plt.savefig('test.png')
         plt.show()
 
         
     def _checkMemory(self):
+        """
         from guppy import hpy
         h = hpy() 
         print h.heap()
-
+        """
+        pass
 
     def _initArg(self):
         scriptusage = '%(prog)s [-d] [-p] [-n]'

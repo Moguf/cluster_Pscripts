@@ -14,7 +14,7 @@ class ReadNinfo:
         self.angl_format="%-7s%7d%7d%7d%7d%7d%7d%7d%7d%7d    %8.4f    %7.4f    %7.4f    %7.4f %7s\n"
         self.aicg13_format="%-7s%7d%7d%7d%7d%7d%7d%7d%7d%7d    %8.4f    %7.4f    %7.4f    %7.4f    %7.4f %7s\n"
         self.dihd_format="%-7s%7d%7d%7d%7d%7d%7d%7d%7d%7d%7d%7d    %9.4f    %7.4f    %7.4f    %7.4f    %7.4f %7s\n"
-        self.aicg14_format="%-7s%7d%7d%7d%7d%7d%7d%7d%7d%7d%7d%7d    %9.4f    %7.4f    %7.4f    %7.4f    %7.4f %7s\n"
+        self.aicgdih_format="%-7s%7d%7d%7d%7d%7d%7d%7d%7d%7d%7d%7d    %9.4f    %7.4f    %7.4f    %7.4f    %7.4f %7s\n"
         self.contact_format="%-7s%7d%7d%7d%7d%7d%7d%7d     %8.4f    %7.4f%7d    %7.4f %4s\n"
 
     def main(self):
@@ -64,8 +64,8 @@ class ReadNinfo:
                                               ,ilist[7],ilist[8],ilist[9],ilist[10]
                                               ,ilist[11],ilist[12],ilist[13],ilist[14]
                                               ,ilist[15],ilist[16])
-                elif ikey=="aicg14":
-                    ostr+=self.aicg14_format % (ikey,ilist[0],ilist[1],ilist[2]
+                elif ikey=="aicgdih":
+                    ostr+=self.aicgdih_format % (ikey,ilist[0],ilist[1],ilist[2]
                                                 ,ilist[3],ilist[4],ilist[5],ilist[6]
                                                 ,ilist[7],ilist[8],ilist[9],ilist[10]
                                                 ,ilist[11],ilist[12],ilist[13],ilist[14]
@@ -96,8 +96,6 @@ class ReadNinfo:
         parser.add_argument('inputfile',nargs='?',help="input-file[.ninfo]")
         parser.add_argument('-o','--output',nargs='?',help="output-file[.ninfo]",default='out.ninfo')
         self.filename=parse.parse_args().inputfile
-        
-
         
             
 if __name__=="__main__":
