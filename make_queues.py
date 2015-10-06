@@ -27,7 +27,8 @@ class Queue:
         otxt+="#$ -o "+self.inpdir+"log/"+self.name+".log"+"\n"
         otxt+="#$ -e "+self.inpdir+"err/"+self.name+".err"+"\n"
         otxt+="#$ -q "+self.queue+"\n"
-        otxt+="#$ -pe smp "+str(self.core)+"\n\n"
+        otxt+="#$ -pe smp "+str(self.core)+"\n"
+        otxt+="#$ -m abe -M myjobkbu@gmail\n\n"
 
         otxt+="OMP_NUM_THREADS="+str(self.core)+"\n"
         otxt+=self.exedir+"/cafemol"+" "+self.inpdir+self.name+".inp"+"\n"
@@ -57,6 +58,7 @@ class MakeQueues:
         self.mkdirErrLog()
         self.makeShfiles()
 
+        
 
     def makeShfiles(self):
         cmdline="ls "+self.WORKDIR+"*.inp"

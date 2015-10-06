@@ -1,5 +1,5 @@
-#!/rei_fs1/ono/python/bin/python
-####!/home/ono/Python-2.7.9/python
+#!/home/ono/Python-2.7.9/python
+##!/rei_fs1/ono/python/bin/python
 #coding:utf-8
 #editor:ono
 #This script makes json-style-input-file from cafemol input file.

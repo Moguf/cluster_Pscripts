@@ -1,5 +1,5 @@
-#!/rei_fs1/ono/python/bin/python
-####!/home/ono/Python-2.7.9/python
+#!/home/ono/Python-2.7.9/python
+##!/rei_fs1/ono/python/bin/python
 #coding:utf-8
 #editor:ono
 #This script makes input files and submits queue.
@@ -27,15 +27,27 @@ class SubmitQueue:
         inputs.makeInps()
         self.BASEDIR=inputs.BASEDIR
         self.INPDIR=inputs.INPDIR
-
+        
         self._makeQueue()
-        self.submitQueue()
+        #self.submitQueue()
 
     def _makeQueue(self):
         queues=MakeQueues()
         queues.setQueue(self.loadjson["queue"]["6"][-1])
         queues.setCore(self.loadjson["queue"]["8"][-1])
         queues.main(self.INPDIR,self.BASEDIR)
+        self.makeBatch(queues.WORKDIR)
+
+    def makeBatch(self,workdir):
+        prefix = workdir.split('/')[-2]
+        with open(workdir+'do.sh','w') as ofile:
+            otxt="#! /bin/sh\n\n"
+            otxt+="for i in `ls "+prefix+"*.sh`\n"
+            otxt+="do\n"
+            otxt+="    qsub $i\n"
+            otxt+="done"
+            ofile.write(otxt)
+
         
     def submitQueue(self):
         filename=self.loadjson["inputfile"]["filenames"]["filename"]["name"]
