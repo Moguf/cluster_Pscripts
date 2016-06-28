@@ -10,7 +10,6 @@ import argparse
 from my_error import MyError
 
 
-
 class DcdHeader:
     def __init__(self):
         self.nset = None
@@ -25,7 +24,6 @@ class DcdHeader:
         self.natoms = None
         self.blocksize=0
 
-
     def show(self):
         for ikey in self.__dict__.keys():
             print ikey,self.__dict__[ikey]
@@ -35,7 +33,6 @@ class DcdHeader:
         for ikey in self.__dict__.keys():
             outstr+="%s:%s\n" %(ikey,str(self.__dict__[ikey]))
         return outstr
-
 
 
 class DcdFile(object):
@@ -83,10 +80,8 @@ class DcdFile(object):
         self.dcdfile.seek(self.dcdheader.blocksize)
         return self
         
-
     def __len__(self):
         return self.nframes
-
 
     def next(self):
         self.iterValue+=1
@@ -94,11 +89,9 @@ class DcdFile(object):
             raise StopIteration
         return self.readOneStep()
 
-
     def main(self):
         self._initArg()
         self.read(self.inputfile)
-
         
     def read(self,inputfile):
         self.outstr+="read: %s\n" %(inputfile)
@@ -106,37 +99,29 @@ class DcdFile(object):
         self.dcdfile=open(self.inputfile,"rb")
         self._readHeader()
 
-
     def close(self):
         self.dcdfile.close()
 
-
     def readOneStep(self):
         coord_matrix = []
-        
         b = self._pickData()
         x = struct.unpack('f' * self.dcdheader.natoms, b)
         b = self._pickData()
         y = struct.unpack('f' * self.dcdheader.natoms, b)
         b = self._pickData()
         z = struct.unpack('f' * self.dcdheader.natoms, b)
-        
         for i in xrange(self.dcdheader.natoms) :
             xyz = [x[i], y[i], z[i]]
             coord_matrix.append(xyz)
-
         return coord_matrix
-
 
     def writeToMovie(self,outfile):
         pass
-
 
     def _readHeader(self):
         ### read first line
         b=self._pickData()
         header=struct.unpack('4s9if10i',b)
-
         if header[0].strip() != "CORD":
             raise MyError('Input Error:','Inpug file is not dcd-format.')
 
@@ -197,14 +182,12 @@ class DcdFile(object):
             print "-"*53
             self.nframes=total_steps
             return False            
-
             
     def _pickData(self):
         num = struct.unpack('i', self.dcdfile.read(4))[0]
         b=self.dcdfile.read(num)
         self.dcdfile.seek(4, os.SEEK_CUR)
         return b
-        
 
     def _initArg(self):
         parser = argparse.ArgumentParser(description='This scripts defined dcd-style in Cafemol.')
@@ -213,7 +196,6 @@ class DcdFile(object):
         parser.add_argument('-o','--output',nargs='?',help="output-file[.json]",default='out.json')
 
         self.inputfile=parser.parse_args().inputfile
-
 
     def test(self):
         self.read("./test/inp/2gxa.dcd")
@@ -246,13 +228,11 @@ class DcdFile2(DcdFile):
     def __init__(self):
         DcdFile.__init__(self)
 
-
     def _pickData(self):
         num = struct.unpack('i', self.dcdfile.read(4))[0]
         b=self.dcdfile.read(num)
         self.dcdfile.seek(4, os.SEEK_CUR)
         return b,num
-
 
     def readOneStep(self):
         coord_matrix = []

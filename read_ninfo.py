@@ -21,7 +21,6 @@ class ReadNinfo:
         self._initArg()
         self.read(self.filename)
         
-
     def read(self,filename):
         rfile=open(filename,'r')
         for iline in rfile.readlines():
@@ -96,6 +95,9 @@ class ReadNinfo:
         parser.add_argument('inputfile',nargs='?',help="input-file[.ninfo]")
         parser.add_argument('-o','--output',nargs='?',help="output-file[.ninfo]",default='out.ninfo')
         self.filename=parse.parse_args().inputfile
+
+    def close(self):
+        self.data={}        
         
             
 if __name__=="__main__":
