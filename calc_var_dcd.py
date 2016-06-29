@@ -10,7 +10,7 @@ import scipy.spatial as sp
 
 from dcdfile import DcdFile
 from read_ninfo import ReadNinfo
-from calc_var_c import calcVarC
+import calcVarC
 
 
 class CalcVarDcd:
@@ -28,7 +28,7 @@ class CalcVarDcd:
         self._initArg()
         self.readDcd(self.inputfile)
         self.readNinfo(self.ninfofile)
-        self.calcVar()
+        self.calcVarC()
         #self.writeJson()
         
     def printInfo(self):
@@ -46,8 +46,8 @@ class CalcVarDcd:
         for i,xyz in enumerate(self.dcddata[self.begin_step:]):
             sys.stdout.write('%4d/%4d\r' % (i+self.begin_step+1,tstep))
             for icon in self.contact_data:
-                imp = icon[0,0]-1
-                jmp = icon[0,1]-1
+                imp = icon[0,0]
+                jmp = icon[0,1]
                 key = "%d-%d" % (imp,jmp)
                 if not key in self.result.keys():
                     self.result[key] = []
@@ -57,7 +57,11 @@ class CalcVarDcd:
 
     def calcVarC(self):
         sys.stdout.write('Now Calculating in C!!\r')
-
+        c_result = calcVarC.calc(self.dcddata[self.begin_step:],self.contact_data.tolist())
+        sys.stdout.write('End Calculating in C!!\n')
+        mat_result = np.matrix(c_result) * 0.1        ## Unit is "nm"
+        return (np.mean(mat_result,axis=1),np.var(mat_result,axis=1))
+        
     def writeJson(self):
         with open(self.output,'w') as f:
             json.dump(self.result,f,indent=4)
@@ -83,7 +87,7 @@ class CalcVarDcd:
         print('FILE: ', ninfofile)
         print('==============================')
         self.contact_data = np.matrix(tmp.data['contact'])
-        self.contact_data = self.contact_data[:,np.array([3,4])].astype(int)
+        self.contact_data = self.contact_data[:,np.array([3,4])].astype(int) - 1
         # Selecting contact numbers.
         # For example
         # "[[1,5],[15,19],...,]" -> "[[1st atom,5th atom],[15th atom,19th atom],...,]"
